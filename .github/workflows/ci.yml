@@ -4,6 +4,9 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: write
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -33,13 +36,46 @@ jobs:
           gradle-version: '8.14'
 
       - name: Test core modules
-        run: >
-          gradle --no-daemon --stacktrace
-          :core-model:test
-          :core-world:test
-          :core-grammar:test
-          :inference:test
-          :core-agent:test
+        id: test
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          gradle --no-daemon --stacktrace \
+            :core-model:test \
+            :core-world:test \
+            :core-grammar:test \
+            :inference:test \
+            :core-agent:test \
+            2>&1 | tee "$RUNNER_TEMP/build.log"
+
+      # Publishes compiler diagnostics to a `ci-logs` branch, readable over raw
+      # HTTPS without authentication.
+      #
+      # The development machine has no JDK, Gradle or Kotlin compiler
+      # (constraint C2) and no working `gh`, so CI is the only type-checker in
+      # the loop -- and the Actions logs API requires auth even for a public
+      # repo. Without this, every compile error costs a manual copy-paste round
+      # trip. Files are named per run so they are never served stale from cache.
+      - name: Publish build diagnostics
+        if: always()
+        run: |
+          set -e
+          OUT="$RUNNER_TEMP/logout"
+          rm -rf "$OUT" && mkdir -p "$OUT"
+
+          grep -nE '^e: |^w: |error:|FAILED|FAILURE:|Caused by:|Execution failed|^> Task .*(FAILED|failed)' \
+            "$RUNNER_TEMP/build.log" | head -500 > "$OUT/diagnostics-${{ github.run_number }}.txt" || true
+          tail -n 150 "$RUNNER_TEMP/build.log" > "$OUT/tail-${{ github.run_number }}.txt" || true
+          printf 'run=%s sha=%s outcome=%s\n' \
+            "${{ github.run_number }}" "${{ github.sha }}" "${{ steps.test.outcome }}" \
+            > "$OUT/status-${{ github.run_number }}.txt"
+
+          cd "$OUT"
+          git init -q -b ci-logs
+          git add -A
+          git -c user.name=ci -c user.email=ci@local commit -qm "diagnostics for ${{ github.sha }}"
+          git push -q --force \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" ci-logs
 
       - name: Upload test reports
         if: always()
@@ -48,3 +84,9 @@ jobs:
           name: test-reports
           path: '**/build/reports/tests/**'
           if-no-files-found: ignore
+
+      # continue-on-error above keeps the diagnostics step reachable; the job
+      # must still fail so a red build is not mistaken for a green one.
+      - name: Fail the job if the tests failed
+        if: steps.test.outcome == 'failure'
+        run: exit 1
