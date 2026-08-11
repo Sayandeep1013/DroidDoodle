@@ -262,7 +262,19 @@ P2, P3 and P4 are independent of each other once P1 lands.
 | P4 `:inference` | **verified — CI green** |
 | P5 `:core-agent` | **verified — CI green** |
 | P6 Prompt Suite | **verified — CI green** |
-| P7–P10 | not started |
+| P7 `:app` canvas | **builds — CI green**; DEVICE criteria unverified |
+| P8–P10 | not started |
+
+P7's remaining acceptance criteria — canvas renders each fixture correctly,
+drag snaps to the nearest free cell and is refused when none is free, a scripted
+turn visibly changes the canvas — are DEVICE-tagged. An assembling APK does not
+establish any of them.
+
+Four CI round trips were spent reaching a green Android build: missing
+`google()` repository, missing `android.useAndroidX`, and one bad Compose
+import. Three of the four were environment setup that a local SDK resolves in
+seconds. This is the evidence behind the toolchain recommendation for P8, where
+the failure modes are native and the cycle cost is higher.
 
 "Verified" here means precisely one thing: the `jvm` job compiles every module
 and every test passes. See `50-REVERIFICATION.md` for what that does and does
