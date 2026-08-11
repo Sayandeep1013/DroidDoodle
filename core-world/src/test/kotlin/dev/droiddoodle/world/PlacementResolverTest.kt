@@ -85,12 +85,14 @@ class PlacementResolverTest {
     @Test
     fun `north of falls back laterally before going further north`() {
         // Candidate order for NORTH_OF from (0,0), per docs/20-world-model.md §7:
-        //   (-1,0) | (-1,-1) (-1,1) | (-2,0) | (-2,-1) (-2,1) | (-3,0) …
+        // Manhattan distance first, then primary-axis distance, then lateral
+        // magnitude, then negative lateral before positive. The sequence returns
+        // to nearer rows at wider lateral offsets before advancing north.
         var board = villageBoard()
         val expected = listOf(
-            Cell(-1, 0), Cell(-1, -1), Cell(-1, 1),
-            Cell(-2, 0), Cell(-2, -1), Cell(-2, 1),
-            Cell(-3, 0),
+            Cell(-1, 0),
+            Cell(-1, -1), Cell(-1, 1), Cell(-2, 0),
+            Cell(-1, -2), Cell(-1, 2), Cell(-2, -1), Cell(-2, 1), Cell(-3, 0),
         )
         for ((index, cell) in expected.withIndex()) {
             val actual = resolve(board, relative(board, "Village", Relation.NORTH_OF))

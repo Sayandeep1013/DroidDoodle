@@ -217,15 +217,21 @@ exact cell, silently moving it elsewhere would make the trace misleading.
    fixed order negative-then-positive. For `NORTH_OF` from `(r, c)`:
 
    ```
-   (r-1, c)
-   (r-1, c-1)   (r-1, c+1)
-   (r-2, c)
-   (r-2, c-1)   (r-2, c+1)
-   (r-3, c)     …
+   sum 1   (r-1,c)
+   sum 2   (r-1,c-1)  (r-1,c+1)  (r-2,c)
+   sum 3   (r-1,c-2)  (r-1,c+2)  (r-2,c-1)  (r-2,c+1)  (r-3,c)
+   sum 4   (r-1,c-3)  (r-1,c+3)  (r-2,c-2)  (r-2,c+2)  (r-3,c-1) …
    ```
 
-   Primary-axis distance is capped at 4. The first free in-bounds candidate
-   wins.
+   Both primary-axis distance and lateral offset are capped at 4. The first
+   free in-bounds candidate wins.
+
+   Note that the sequence returns to nearer rows at wider lateral offsets
+   before advancing further north — `(r-1,c-2)` precedes `(r-2,c-1)`. That is
+   what "nearest free cell preserving the direction" means under a Manhattan
+   metric, and it is worth stating explicitly because an earlier draft of this
+   document showed a truncated example implying a strict row-by-row walk, which
+   the rule does not produce.
 4. If no candidate is free → `NO_FREE_CELL`.
 
 The invariant this guarantees is directional, not exact. After a successful
