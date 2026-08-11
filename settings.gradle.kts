@@ -14,15 +14,24 @@ dependencyResolutionManagement {
 
 rootProject.name = "droiddoodle"
 
-// Pure-Kotlin modules only. See docs/10-architecture.md §1.
-//
-// The Android modules (:inference-llama, :app) are deliberately NOT included
-// yet. Gradle configures every included project even when a single task is
-// requested, so including them would force the Android Gradle Plugin and the
-// Android SDK onto the `jvm` CI job -- breaking the P0 acceptance criterion
-// that the JVM job needs neither. They are added when P7/P8 begin.
+// Pure-Kotlin modules. See docs/10-architecture.md §1.
 include(":core-model")
 include(":core-world")
 include(":core-grammar")
 include(":inference")
 include(":core-agent")
+
+// Android modules, included conditionally.
+//
+// Gradle configures every included project even when a single task is
+// requested, so unconditionally including these would drag the Android Gradle
+// Plugin and the Android SDK into the `jvm` CI job -- breaking the P0
+// acceptance criterion that the fast job needs neither, and slowing the loop
+// that actually catches our bugs.
+//
+// DD_SKIP_ANDROID=1 keeps that job pure Kotlin. Everything else -- local
+// development, the `android` CI job, Android Studio -- gets the full build.
+// :inference-llama joins in P8, when there is native code for it to hold.
+if (System.getenv("DD_SKIP_ANDROID") != "1") {
+    include(":app")
+}

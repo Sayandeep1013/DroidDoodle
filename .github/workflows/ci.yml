@@ -38,6 +38,10 @@ jobs:
       - name: Test core modules
         id: test
         continue-on-error: true
+        env:
+          # Keeps :app out of the configuration phase so this job needs no
+          # Android SDK and stays fast. See settings.gradle.kts.
+          DD_SKIP_ANDROID: '1'
         run: |
           set -o pipefail
           gradle --no-daemon --stacktrace \
@@ -89,4 +93,63 @@ jobs:
       # must still fail so a red build is not mistaken for a green one.
       - name: Fail the job if the tests failed
         if: steps.test.outcome == 'failure'
+        run: exit 1
+
+  # Slower, and deliberately not a prerequisite for the jvm job: core logic
+  # failures should report in a couple of minutes rather than waiting behind an
+  # Android build. docs/10-architecture.md §7.
+  android:
+    name: Debug APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.14'
+
+      - name: Assemble debug APK
+        id: assemble
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          gradle --no-daemon --stacktrace :app:assembleDebug 2>&1 \
+            | tee "$RUNNER_TEMP/android.log"
+
+      - name: Publish Android diagnostics
+        if: always()
+        run: |
+          set -e
+          OUT="$RUNNER_TEMP/androidout"
+          rm -rf "$OUT" && mkdir -p "$OUT"
+          grep -nE '^e: |^w: |error:|FAILED|FAILURE:|Caused by:|Execution failed' \
+            "$RUNNER_TEMP/android.log" | head -500 \
+            > "$OUT/android-diagnostics-${{ github.run_number }}.txt" || true
+          tail -n 150 "$RUNNER_TEMP/android.log" \
+            > "$OUT/android-tail-${{ github.run_number }}.txt" || true
+          cd "$OUT"
+          git init -q -b android-logs
+          git add -A
+          git -c user.name=ci -c user.email=ci@local commit -qm "android diagnostics ${{ github.sha }}"
+          git push -q --force \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" \
+            android-logs
+
+      - name: Upload APK
+        if: steps.assemble.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: droiddoodle-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: warn
+
+      - name: Fail the job if the build failed
+        if: steps.assemble.outcome == 'failure'
         run: exit 1
