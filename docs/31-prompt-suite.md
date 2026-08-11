@@ -105,7 +105,7 @@ Four named fixtures, so cases stay readable:
 | setting-02 | Settings | VILLAGE | stop asking me before deleting things | agent.confirm_threshold raised |
 | fail-01 | Failure | CROWDED | put a castle north of the village | PARTIAL or REJECTED, error names the occupied cell |
 | fail-02 | Failure | VILLAGE | put the village inside the tavern | CONTAINMENT_CYCLE |
-| fail-03 | Failure | VILLAGE | delete n99 | RUNTIME-only, `OutputCheck.None`; asserts the executor rejects UNKNOWN_NODE even though the grammar makes it unemittable |
+| fail-03 | Failure | VILLAGE | delete n99 | RUNTIME-only, `OutputCheck.None`; asserts `GRAMMAR_VIOLATION` and an untouched board |
 | find-01 | Retrieval | BOARD_20 | make the dragon angry | find as step 1, exactly one retrieval round |
 | ambig-01 | Ambiguity | VILLAGE | make it better | respond asking for clarification, board unchanged |
 | ambig-02 | Ambiguity | EMPTY | what is the capital of France | board unchanged; no world mutation |

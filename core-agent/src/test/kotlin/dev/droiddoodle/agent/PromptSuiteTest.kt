@@ -377,7 +377,7 @@ class PromptSuiteTest {
     // ---- reference resolution ---------------------------------------------------
 
     @Test
-    fun `anaph-01 resolves "it" through the reference table`() = runTest {
+    fun `anaph-01 resolves it through the reference table`() = runTest {
         val board = VILLAGE.put("Castle", 2, 2)
         check(
             SuiteCase(
@@ -392,7 +392,7 @@ class PromptSuiteTest {
     }
 
     @Test
-    fun `anaph-02 resolves "that" for a spatial move`() = runTest {
+    fun `anaph-02 resolves that for a spatial move`() = runTest {
         val board = VILLAGE.put("Castle", 2, 2)
         check(
             SuiteCase(

@@ -255,20 +255,18 @@ P2, P3 and P4 are independent of each other once P1 lands.
 
 | Package | State |
 |---|---|
-| P0 Scaffolding and CI | authored |
-| P1 `:core-model` | authored |
-| P2 `:core-world` | authored |
-| P3 `:core-grammar` | authored |
-| P4 `:inference` | authored |
-| P5 `:core-agent` | **not started** |
-| P6 Prompt Suite | **not started** |
+| P0 Scaffolding and CI | **verified — CI green** |
+| P1 `:core-model` | **verified — CI green** |
+| P2 `:core-world` | **verified — CI green** |
+| P3 `:core-grammar` | **verified — CI green** |
+| P4 `:inference` | **verified — CI green** |
+| P5 `:core-agent` | **verified — CI green** |
+| P6 Prompt Suite | **verified — CI green** |
 | P7–P10 | not started |
 
-**"Authored" is not "verified."** Constraint C2 means none of this has been
-compiled. The `jvm` CI job is the first thing that will ever type-check it, and
-the first run should be expected to surface compile errors. Nothing here may be
-called working until that job is green.
+"Verified" here means precisely one thing: the `jvm` job compiles every module
+and every test passes. See `50-REVERIFICATION.md` for what that does and does
+not establish.
 
-P7–P10 additionally need an Android SDK build, a device, and a downloaded model.
-Authoring them before P0–P6 are green would pile unverified code on unverified
-contracts.
+P7–P10 need an Android SDK build, a device, and a downloaded model, none of
+which exist on the development machine.

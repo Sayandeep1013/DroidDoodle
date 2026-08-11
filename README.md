@@ -37,13 +37,19 @@ intent document wins.
 
 ## Current state
 
-Packages **P0–P6** are in progress: the pure-Kotlin agent core. These contain
-the entire agent design — world model, tools, grammar, context assembly,
-planner, executor, trace — and they run as JVM unit tests with no Android SDK,
-no emulator, and no model file.
+Packages **P0–P6** are complete and green in CI: the pure-Kotlin agent core.
+World model, tools, grammar, context assembly, planner, executor and trace, plus
+the Prompt Suite — all running as JVM unit tests with no Android SDK, no
+emulator and no model file.
 
 **P7–P10** — Compose UI, the llama.cpp JNI bridge, trace UI, and on-device
 measurement — are not started.
+
+What green does **not** mean: nothing has run on a device, no real model has
+produced a single plan, and the GBNF grammar has never been fed to llama.cpp.
+Every plan the suite executes was written by hand, so it proves the runtime
+executes correct plans correctly and says nothing yet about whether a 1B model
+can produce them. See [`docs/50-REVERIFICATION.md`](docs/50-REVERIFICATION.md).
 
 ## Building
 
