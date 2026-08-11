@@ -1,5 +1,10 @@
 pluginManagement {
     repositories {
+        // google() must come first and must be present at all: the Android
+        // Gradle Plugin is published only to Google's Maven, so without it the
+        // root `plugins { ... apply false }` block fails to resolve during
+        // configuration -- before any module is even evaluated.
+        google()
         mavenCentral()
         gradlePluginPortal()
     }
@@ -8,6 +13,7 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        google()
         mavenCentral()
     }
 }

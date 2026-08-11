@@ -69,7 +69,13 @@ jobs:
 
           grep -nE '^e: |^w: |error:|FAILED|FAILURE:|Caused by:|Execution failed|^> Task .*(FAILED|failed)' \
             "$RUNNER_TEMP/build.log" | head -500 > "$OUT/diagnostics-${{ github.run_number }}.txt" || true
-          tail -n 150 "$RUNNER_TEMP/build.log" > "$OUT/tail-${{ github.run_number }}.txt" || true
+          # Gradle prints the actual cause in a "What went wrong" block near the
+          # TOP of the log; --stacktrace then buries it under hundreds of frames,
+          # so a plain tail shows nothing useful.
+          sed -n '/^\* What went wrong:/,/^\* Get more help/p' "$RUNNER_TEMP/build.log" \
+            | head -60 > "$OUT/cause-${{ github.run_number }}.txt" || true
+          grep -v $'\t at \\|^\tat ' "$RUNNER_TEMP/build.log" | tail -n 120 \
+            > "$OUT/tail-${{ github.run_number }}.txt" || true
           printf 'run=%s sha=%s outcome=%s\n' \
             "${{ github.run_number }}" "${{ github.sha }}" "${{ steps.test.outcome }}" \
             > "$OUT/status-${{ github.run_number }}.txt"
@@ -132,7 +138,9 @@ jobs:
           grep -nE '^e: |^w: |error:|FAILED|FAILURE:|Caused by:|Execution failed' \
             "$RUNNER_TEMP/android.log" | head -500 \
             > "$OUT/android-diagnostics-${{ github.run_number }}.txt" || true
-          tail -n 150 "$RUNNER_TEMP/android.log" \
+          sed -n '/^\* What went wrong:/,/^\* Get more help/p' "$RUNNER_TEMP/android.log" \
+            | head -60 > "$OUT/android-cause-${{ github.run_number }}.txt" || true
+          grep -v $'\t at \\|^\tat ' "$RUNNER_TEMP/android.log" | tail -n 120 \
             > "$OUT/android-tail-${{ github.run_number }}.txt" || true
           cd "$OUT"
           git init -q -b android-logs
