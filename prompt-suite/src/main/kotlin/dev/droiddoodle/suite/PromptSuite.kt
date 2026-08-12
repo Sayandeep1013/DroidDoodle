@@ -242,17 +242,17 @@ public object PromptSuite {
         ),
         SuiteCase(
             id = "anaph-01",
-            board = board,
+            board = VILLAGE_WITH_CASTLE,
             message = "make it red",
-            refs = ReferenceTable(lastCreated = board.idOf("Castle")),
+            refs = ReferenceTable(lastCreated = VILLAGE_WITH_CASTLE.idOf("Castle")),
             plans = listOf(plan("""{"tool":"update_node","args":{"node":"n4","color":"RED"}}""")),
             assertions = listOf(outcomeIs(Outcome.OK), nodeCount(4)),
         ),
         SuiteCase(
             id = "anaph-02",
-            board = board,
+            board = VILLAGE_WITH_CASTLE,
             message = "move that west of the village",
-            refs = ReferenceTable(lastCreated = board.idOf("Castle")),
+            refs = ReferenceTable(lastCreated = VILLAGE_WITH_CASTLE.idOf("Castle")),
             plans = listOf(
                 plan("""{"tool":"move_node","args":{"node":"n4","to":{"rel":"WEST_OF","ref":"n1"}}}"""),
             ),

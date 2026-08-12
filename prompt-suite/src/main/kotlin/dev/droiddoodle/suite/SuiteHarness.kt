@@ -67,6 +67,13 @@ public val VILLAGE: Board
         .link("Village", "Tavern", EdgeType.CONTAINS)
         .link("Village", "Borin", EdgeType.CONTAINS)
 
+/**
+ * VILLAGE plus a Castle away from the cluster, for the anaphora cases: "it" and
+ * "that" must resolve through the reference table to n4, never by the model
+ * guessing from the board.
+ */
+public val VILLAGE_WITH_CASTLE: Board get() = VILLAGE.put("Castle", 2, 2)
+
 /** VILLAGE with every cell in rows -1..1, columns -1..1 filled. */
 public val CROWDED: Board
     get() {
