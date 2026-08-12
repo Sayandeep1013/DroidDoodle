@@ -120,6 +120,7 @@ internal fun AppScreen(vm: BoardViewModel, modelLabel: String) {
             SubScreen(title = "Prompt Suite", onBack = { screen = Screen.CANVAS }) {
                 SuiteRunnerScreen(
                     vm = suiteVm,
+                    modelId = vm.engine.modelId,
                     onExportTraces = {
                         shareText(context, it, "suite-${vm.engine.modelId}-traces.json")
                     },

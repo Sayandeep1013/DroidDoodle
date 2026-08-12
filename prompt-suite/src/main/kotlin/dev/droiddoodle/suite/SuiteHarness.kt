@@ -1,6 +1,7 @@
 package dev.droiddoodle.suite
 
 import dev.droiddoodle.agent.Outcome
+import dev.droiddoodle.agent.LoopStrategy
 import dev.droiddoodle.agent.PlanThenExecuteStrategy
 import dev.droiddoodle.agent.ReferenceTable
 import dev.droiddoodle.agent.ToolRegistry
@@ -245,8 +246,13 @@ public object SuiteRunner {
      * MODEL mode: run the case against a real engine, ignoring its canned plan.
      * This is what P10 measures; it says nothing until a real model drives it.
      */
-    public suspend fun runWith(case: SuiteCase, engine: LlmEngine, clock: Clock): SuiteOutcome {
-        val result = PlanThenExecuteStrategy().run(
+    public suspend fun runWith(
+        case: SuiteCase,
+        engine: LlmEngine,
+        clock: Clock,
+        strategy: LoopStrategy = PlanThenExecuteStrategy(),
+    ): SuiteOutcome {
+        val result = strategy.run(
             request = TurnRequest(
                 userMessage = case.message,
                 board = case.board,
@@ -259,7 +265,10 @@ public object SuiteRunner {
                 engine = engine,
                 registry = ToolRegistry(),
                 clock = clock,
-                turnIds = IdGenerator.sequential(),
+                // Prefixed with the case id. A bare sequential generator makes
+                // every case's turn "turn-1", so an exported multi-case
+                // document would carry colliding ids -- unusable as a record.
+                turnIds = IdGenerator.sequential(prefix = case.id),
             ),
         )
         return SuiteOutcome(result.board, result)

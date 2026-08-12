@@ -44,13 +44,12 @@ jobs:
           DD_SKIP_ANDROID: '1'
         run: |
           set -o pipefail
-          gradle --no-daemon --stacktrace \
-            :core-model:test \
-            :core-world:test \
-            :core-grammar:test \
-            :inference:test \
-            :core-agent:test \
-            :prompt-suite:test \
+          # `build` rather than an enumerated task list: it compiles main and
+          # test and runs `check` for every included project, so a new module
+          # is covered the day it is added instead of the day someone
+          # remembers to add it here. :prompt-suite was nearly missed exactly
+          # that way.
+          gradle --no-daemon --stacktrace --continue build \
             2>&1 | tee "$RUNNER_TEMP/build.log"
 
       # Publishes compiler diagnostics to a `ci-logs` branch, readable over raw
@@ -160,9 +159,17 @@ jobs:
           # errors. compileDebugKotlin does not depend on buildCMakeDebug, and
           # with no local compiler (constraint C2) every hidden error costs a
           # full CI round trip to discover.
+          # assembleRelease as well as debug: release builds package and shrink
+          # differently, and a release-only failure discovered later is a
+          # failure discovered at the worst possible moment.
+          #
+          # lintDebug is the closest thing to a device this loop has. It is the
+          # only check that catches calling an API above minSdk, which under
+          # constraint C2 would otherwise surface as a crash on the user's
+          # phone. It does not gate the build; the report is published to read.
           gradle --no-daemon --stacktrace --continue \
             "-Pdd.ndkVersion=$NDK_VERSION" \
-            :app:assembleDebug 2>&1 \
+            :app:assembleDebug :app:assembleRelease :app:lintDebug 2>&1 \
             | tee "$RUNNER_TEMP/android.log"
 
       # "The APK assembles with the native library" is a P8 acceptance criterion,
@@ -196,6 +203,12 @@ jobs:
           rm -rf "$OUT" && mkdir -p "$OUT"
           if [ -f "$RUNNER_TEMP/apk-contents.txt" ]; then
             cp "$RUNNER_TEMP/apk-contents.txt" "$OUT/apk-contents-${{ github.run_number }}.txt"
+          fi
+          # Lint's own report, which carries the API-level findings the build
+          # log only summarises.
+          if [ -f app/build/reports/lint-results-debug.txt ]; then
+            head -300 app/build/reports/lint-results-debug.txt \
+              > "$OUT/lint-${{ github.run_number }}.txt"
           fi
           # CMake and ninja report in their own dialects, so the native build
           # needs patterns the Kotlin-only jvm job does not.

@@ -53,6 +53,15 @@ android {
         buildConfig = true
     }
 
+    lint {
+        // A text report so CI can publish it over raw HTTPS like everything
+        // else. Not a gate: lint's defaults include stylistic checks that
+        // would turn a useful signal into noise the loop learns to ignore.
+        textReport = true
+        abortOnError = false
+        checkDependencies = true
+    }
+
     packaging {
         resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
     }

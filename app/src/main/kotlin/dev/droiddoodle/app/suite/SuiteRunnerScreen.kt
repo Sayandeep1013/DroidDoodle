@@ -35,6 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @Composable
 internal fun SuiteRunnerScreen(
     vm: SuiteRunnerViewModel,
+    modelId: String,
     onExportTraces: (String) -> Unit,
     onExportSummary: (String) -> Unit,
 ) {
@@ -57,7 +58,7 @@ internal fun SuiteRunnerScreen(
                     }
                 }
                 if (state.results.isNotEmpty() && !state.running) {
-                    OutlinedButton(onClick = { onExportSummary(vm.exportSummary(MODEL_PLACEHOLDER)) }) {
+                    OutlinedButton(onClick = { onExportSummary(vm.exportSummary(modelId)) }) {
                         Text("Summary")
                     }
                     OutlinedButton(onClick = { onExportTraces(vm.exportTraces()) }) {
@@ -185,5 +186,3 @@ internal fun SuiteRunnerScreen(
         }
     }
 }
-
-private const val MODEL_PLACEHOLDER = "see trace modelId"

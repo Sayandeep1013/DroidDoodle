@@ -32,9 +32,13 @@ public interface LoopStrategy {
  *
  * See docs/23-agent-runtime.md.
  */
-public class PlanThenExecuteStrategy : LoopStrategy {
-
-    override val id: String = "plan_then_execute"
+public class PlanThenExecuteStrategy(
+    override val id: String = "plan_then_execute",
+    /** When false, a `find`-first plan is refused instead of re-planning. */
+    private val allowRetrieval: Boolean = true,
+    /** When false, `agent.auto_repair` has no effect. */
+    private val allowRepair: Boolean = true,
+) : LoopStrategy {
 
     override suspend fun run(request: TurnRequest, deps: TurnDeps): TurnResult {
         val started = deps.clock.nowMillis()
@@ -54,8 +58,11 @@ public class PlanThenExecuteStrategy : LoopStrategy {
 
         var extraBlock: String? = null
         var role = RoundRole.INITIAL
-        var retrievalUsed = false
-        var repairUsed = false
+        // Starting these "already used" is how a bounded variant refuses the
+        // extra round: the refusal path is the one already tested, rather than
+        // a second code path that could disagree with it.
+        var retrievalUsed = !allowRetrieval
+        var repairUsed = !allowRepair
         var board = request.board
 
         while (true) {
@@ -445,9 +452,31 @@ public class ReActStrategy : LoopStrategy {
         throw NotImplementedError("ReActStrategy is a phase 2 package")
 }
 
-/** Registered but unimplemented. See docs/23-agent-runtime.md §1. */
-public class SingleShotStrategy : LoopStrategy {
-    override val id: String = "single_shot"
-    override suspend fun run(request: TurnRequest, deps: TurnDeps): TurnResult =
-        throw NotImplementedError("SingleShotStrategy is a phase 2 package")
+/**
+ * Exactly one inference per user message: no retrieval re-plan, no repair.
+ *
+ * This exists to make intent criterion L2 -- "the loop strategy is swappable" --
+ * checkable rather than asserted. It is the control condition for P10: the
+ * difference between this and `plan_then_execute` is precisely what the extra
+ * rounds buy, measured rather than assumed.
+ *
+ * Honest about what it is: it delegates to the same pipeline with both extra
+ * rounds disabled, so it demonstrates that the seam works and that behaviour
+ * differs observably through it. It is **not** an independent implementation,
+ * and it does not prove the interface would accommodate a genuinely different
+ * loop. `ReActStrategy` is where that gets tested, and it is still a stub.
+ */
+public class SingleShotStrategy : LoopStrategy by PlanThenExecuteStrategy(
+    id = "single_shot",
+    allowRetrieval = false,
+    allowRepair = false,
+)
+
+/** Every strategy the `agent.loop_strategy` setting may name. */
+public object StrategyRegistry {
+    public fun create(id: String): LoopStrategy = when (id) {
+        "single_shot" -> SingleShotStrategy()
+        "react" -> ReActStrategy()
+        else -> PlanThenExecuteStrategy()
+    }
 }

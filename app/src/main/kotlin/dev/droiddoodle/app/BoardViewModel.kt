@@ -3,7 +3,7 @@ package dev.droiddoodle.app
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.droiddoodle.agent.Outcome
-import dev.droiddoodle.agent.PlanThenExecuteStrategy
+import dev.droiddoodle.agent.StrategyRegistry
 import dev.droiddoodle.agent.ReferenceTable
 import dev.droiddoodle.agent.ToolRegistry
 import dev.droiddoodle.agent.TraceJson
@@ -17,6 +17,7 @@ import dev.droiddoodle.model.IdGenerator
 import dev.droiddoodle.model.NodeId
 import dev.droiddoodle.model.Placement
 import dev.droiddoodle.model.Res
+import dev.droiddoodle.model.SettingKeys
 import dev.droiddoodle.model.SettingsSnapshot
 import dev.droiddoodle.model.Viewport
 import dev.droiddoodle.world.Board
@@ -65,7 +66,6 @@ internal class BoardViewModel(
     private val _state = MutableStateFlow(UiState())
     val state: StateFlow<UiState> = _state.asStateFlow()
 
-    private val strategy = PlanThenExecuteStrategy()
     private val registry = ToolRegistry()
 
     /** What the settings screen renders and what each turn runs under. */
@@ -90,6 +90,13 @@ internal class BoardViewModel(
 
         viewModelScope.launch {
             val current = _state.value
+            val turnSettings = settingsStore.snapshot.value
+            // Chosen per turn from agent.loop_strategy, which is what makes
+            // criterion L2 observable rather than asserted: switching the
+            // setting changes the strategyId recorded in the next trace.
+            val strategy = StrategyRegistry.create(
+                turnSettings.string(SettingKeys.AGENT_LOOP_STRATEGY),
+            )
             val result = strategy.run(
                 request = TurnRequest(
                     userMessage = trimmed,
@@ -100,7 +107,7 @@ internal class BoardViewModel(
                     // Read once, at the start of the turn. A set_setting step
                     // must not change the rules the plan it belongs to is
                     // running under.
-                    settings = settingsStore.snapshot.value,
+                    settings = turnSettings,
                     confirmationGranted = confirmationGranted,
                 ),
                 deps = TurnDeps(
