@@ -1,5 +1,7 @@
 package dev.droiddoodle.agent
 
+import dev.droiddoodle.inference.StopReason
+
 /**
  * The research instrument. Satisfies intent criterion L1.
  *

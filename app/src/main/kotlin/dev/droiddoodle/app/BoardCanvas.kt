@@ -52,6 +52,8 @@ internal fun BoardCanvas(
     onSelect: (NodeId?) -> Unit,
     onDrag: (NodeId, Cell) -> Unit,
     modifier: Modifier = Modifier,
+    /** From `ui.grid_visible`, so the setting has a visible effect. */
+    gridVisible: Boolean = true,
 ) {
     val dark = MaterialTheme.colorScheme.background.luminanceIsDark()
     val measurer = rememberTextMeasurer()
@@ -104,7 +106,7 @@ internal fun BoardCanvas(
                 },
         ) {
             val centre = size.toOffsetCentre()
-            drawGrid(centre, pan, cellPx, gridLine(dark))
+            if (gridVisible) drawGrid(centre, pan, cellPx, gridLine(dark))
             drawHulls(board, centre, pan, cellPx, hullTint(dark))
             drawEdges(board, centre, pan, cellPx, nodeStroke(dark))
             drawNodes(board, centre, pan, cellPx, selected, dragging, dark, measurer)

@@ -30,27 +30,64 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.droiddoodle.app.settings.SettingsScreen
+import dev.droiddoodle.app.trace.TraceScreen
+import dev.droiddoodle.model.SettingKeys
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            DroidDoodleTheme {
-                Surface(Modifier.fillMaxSize()) { AppRoot() }
-            }
+            // The theme lives inside AppRoot, which reads it from settings.
+            AppRoot()
         }
     }
 }
 
+private enum class Screen { CANVAS, TRACE, SETTINGS }
+
 @Composable
 internal fun AppScreen(vm: BoardViewModel) {
     val state by vm.state.collectAsStateWithLifecycle()
+    val settings by vm.settings.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     var input by remember { mutableStateOf("") }
-    var scale by remember { mutableFloatStateOf(1f) }
+    var screen by remember { mutableStateOf(Screen.CANVAS) }
+
+    // ui.cell_size sets the base zoom; the +/- buttons still adjust from there.
+    val baseScale = when (settings.string(SettingKeys.UI_CELL_SIZE)) {
+        "small" -> 0.7f
+        "large" -> 1.4f
+        else -> 1.0f
+    }
+    var zoom by remember { mutableFloatStateOf(1f) }
+    val scale = baseScale * zoom
+
+    when (screen) {
+        Screen.TRACE -> {
+            TraceScreen(
+                traces = state.traces,
+                onExportAll = { shareText(context, vm.exportTraces(), "droiddoodle-trace.json") },
+                onBack = { screen = Screen.CANVAS },
+            )
+            return
+        }
+        Screen.SETTINGS -> {
+            SettingsScreen(
+                snapshot = settings,
+                onChange = vm::setSetting,
+                onResetAll = vm::resetSettings,
+                onBack = { screen = Screen.CANVAS },
+            )
+            return
+        }
+        Screen.CANVAS -> Unit
+    }
 
     Column(Modifier.fillMaxSize()) {
 
@@ -68,10 +105,14 @@ internal fun AppScreen(vm: BoardViewModel) {
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.weight(1f),
             )
-            TextButton(onClick = { scale = (scale - 0.2f).coerceAtLeast(0.4f) }) { Text("−") }
-            TextButton(onClick = { scale = (scale + 0.2f).coerceAtMost(2.0f) }) { Text("+") }
+            TextButton(onClick = { zoom = (zoom - 0.2f).coerceAtLeast(0.4f) }) { Text("−") }
+            TextButton(onClick = { zoom = (zoom + 0.2f).coerceAtMost(2.0f) }) { Text("+") }
             TextButton(onClick = vm::undo, enabled = state.canUndo) { Text("Undo") }
             TextButton(onClick = vm::redo, enabled = state.canRedo) { Text("Redo") }
+            // Reachable from the canvas, not buried behind a developer setting
+            // -- docs/24-trace.md §4.
+            TextButton(onClick = { screen = Screen.TRACE }) { Text("Trace") }
+            TextButton(onClick = { screen = Screen.SETTINGS }) { Text("⚙") }
         }
 
         Box(Modifier.weight(1f)) {
@@ -82,6 +123,7 @@ internal fun AppScreen(vm: BoardViewModel) {
                 onSelect = vm::select,
                 onDrag = vm::dragTo,
                 modifier = Modifier.fillMaxSize(),
+                gridVisible = settings.bool(SettingKeys.UI_GRID_VISIBLE),
             )
 
             if (state.board.isEmpty && !state.thinking) {

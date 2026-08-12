@@ -1,11 +1,13 @@
 package dev.droiddoodle.app
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -16,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -24,8 +27,10 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import dev.droiddoodle.app.model.ModelPickerScreen
 import dev.droiddoodle.app.model.ModelPickerViewModel
+import dev.droiddoodle.app.settings.SettingsStore
 import dev.droiddoodle.inference.LlmEngine
 import dev.droiddoodle.inference.llama.LlamaEngine
+import dev.droiddoodle.model.SettingKeys
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -38,6 +43,28 @@ import kotlinx.coroutines.withContext
  */
 @Composable
 internal fun AppRoot() {
+    val context = LocalContext.current
+    val settingsStore = remember(context) { SettingsStore(context.applicationContext) }
+    val settings by settingsStore.snapshot.collectAsStateWithLifecycle()
+
+    // The theme is applied here rather than in MainActivity so that `ui.theme`
+    // is a live setting. It is agent-writable, which makes "make it dark" a
+    // visible self-modification rather than a logged intention.
+    val dark = when (settings.string(SettingKeys.UI_THEME)) {
+        "dark" -> true
+        "light" -> false
+        else -> isSystemInDarkTheme()
+    }
+
+    DroidDoodleTheme(dark = dark) {
+        Surface(Modifier.fillMaxSize()) {
+            AppContent(settingsStore)
+        }
+    }
+}
+
+@Composable
+private fun AppContent(settingsStore: SettingsStore) {
     val picker: ModelPickerViewModel = viewModel()
     val pickerState by picker.state.collectAsStateWithLifecycle()
     var scriptedEngine by remember { mutableStateOf(false) }
@@ -45,7 +72,7 @@ internal fun AppRoot() {
     if (scriptedEngine) {
         val board: BoardViewModel = viewModel(
             key = "board-scripted",
-            factory = viewModelFactory { initializer { BoardViewModel(DemoEngine()) } },
+            factory = viewModelFactory { initializer { BoardViewModel(DemoEngine(), settingsStore) } },
         )
         AppScreen(board)
         return
@@ -94,7 +121,7 @@ internal fun AppRoot() {
         // Keyed by model id so switching models builds a fresh ViewModel rather
         // than leaving the old engine wired into the old instance.
         key = "board-${chosen.id}",
-        factory = viewModelFactory { initializer { BoardViewModel(loaded) } },
+        factory = viewModelFactory { initializer { BoardViewModel(loaded, settingsStore) } },
     )
     AppScreen(board)
 }

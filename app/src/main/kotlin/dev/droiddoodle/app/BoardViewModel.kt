@@ -6,6 +6,7 @@ import dev.droiddoodle.agent.Outcome
 import dev.droiddoodle.agent.PlanThenExecuteStrategy
 import dev.droiddoodle.agent.ReferenceTable
 import dev.droiddoodle.agent.ToolRegistry
+import dev.droiddoodle.agent.TraceJson
 import dev.droiddoodle.agent.TraceRecord
 import dev.droiddoodle.agent.TurnDeps
 import dev.droiddoodle.agent.TurnRequest
@@ -20,6 +21,7 @@ import dev.droiddoodle.model.SettingsSnapshot
 import dev.droiddoodle.model.Viewport
 import dev.droiddoodle.world.Board
 import dev.droiddoodle.world.BoardOps
+import dev.droiddoodle.app.settings.SettingsStore
 import dev.droiddoodle.inference.LlmEngine
 import dev.droiddoodle.world.History
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,14 +56,30 @@ internal data class PendingConfirmation(
  * what keeps intent criterion L3 visible at the top level: swapping a scripted
  * fixture for llama.cpp changes this one constructor argument and nothing else.
  */
-internal class BoardViewModel(private val engine: LlmEngine) : ViewModel() {
+internal class BoardViewModel(
+    private val engine: LlmEngine,
+    private val settingsStore: SettingsStore,
+) : ViewModel() {
 
     private val _state = MutableStateFlow(UiState())
     val state: StateFlow<UiState> = _state.asStateFlow()
 
     private val strategy = PlanThenExecuteStrategy()
     private val registry = ToolRegistry()
-    private val settings = SettingsSnapshot.DEFAULTS
+
+    /** What the settings screen renders and what each turn runs under. */
+    val settings: StateFlow<SettingsSnapshot> = settingsStore.snapshot
+
+    fun setSetting(key: String, value: String) {
+        settingsStore.set(key, value)
+    }
+
+    fun resetSettings() {
+        settingsStore.resetAll()
+    }
+
+    /** The turns recorded so far, exported as one JSON document. */
+    fun exportTraces(): String = TraceJson.encodeAll(_state.value.traces)
 
     fun send(text: String, confirmationGranted: Boolean = false) {
         val trimmed = text.trim()
@@ -78,7 +96,10 @@ internal class BoardViewModel(private val engine: LlmEngine) : ViewModel() {
                     viewport = Viewport(top = -6, left = -6, rows = 14, cols = 14),
                     refs = current.refs.copy(selected = current.selected),
                     history = current.transcript,
-                    settings = settings,
+                    // Read once, at the start of the turn. A set_setting step
+                    // must not change the rules the plan it belongs to is
+                    // running under.
+                    settings = settingsStore.snapshot.value,
                     confirmationGranted = confirmationGranted,
                 ),
                 deps = TurnDeps(
@@ -99,6 +120,11 @@ internal class BoardViewModel(private val engine: LlmEngine) : ViewModel() {
                 }
                 return@launch
             }
+
+            // What makes self-modification real rather than a logged intention:
+            // a set_setting the agent executed is persisted here, and the
+            // settings screen is reading the same StateFlow.
+            settingsStore.applyAgentWrites(result.settingWrites)
 
             _state.update { previous ->
                 // A turn that changed nothing must not consume an undo step.
