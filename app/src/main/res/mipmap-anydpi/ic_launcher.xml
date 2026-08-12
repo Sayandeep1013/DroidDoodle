@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Only the v26 adaptive form exists. minSdk is 26, so every device this app
-  installs on supports it, and shipping legacy PNG densities as well would mean
-  binary assets that no supported device would ever load.
+  Adaptive only, and in plain mipmap-anydpi rather than mipmap-anydpi-v26:
+  minSdk is 26, so every device this app installs on supports adaptive icons
+  and the version qualifier would be redundant. Shipping legacy PNG densities
+  as well would mean binary assets no supported device could ever load.
 -->
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
     <background android:drawable="@color/ic_launcher_background" />
