@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Only the export directory is shared. Deliberately not `.` -- models/ lives in
-  filesDir and there is no reason for another app to be able to read a
+  Only the export directory is shared. Deliberately not the whole of filesDir:
+  models/ lives there, and no other app has any reason to be able to read a
   several-hundred-megabyte model through this provider.
 -->
 <paths>
