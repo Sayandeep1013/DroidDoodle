@@ -246,10 +246,9 @@ private fun DrawScope.drawNodes(
         // should show its shape -- places, characters, objects -- without
         // reading a word of it. Below 60px there is no room for both, and the
         // label wins because it is the part that is not guessable.
-        val iconPainter = typeIcons[node.type]
-        val roomForIcon = cellPx >= 60f && iconPainter != null
+        val iconPainter = typeIcons[node.type].takeIf { cellPx >= 60f }
         var labelCentre = at
-        if (roomForIcon && iconPainter != null) {
+        if (iconPainter != null) {
             val iconSize = (half * 0.62f).coerceIn(12f, 34f)
             val iconTop = at.y - half + half * 0.22f
             translate(left = at.x - iconSize / 2f, top = iconTop) {
