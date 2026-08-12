@@ -24,6 +24,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
@@ -76,10 +78,17 @@ internal fun BoardCanvas(
     var dragging by remember { mutableStateOf<NodeId?>(null) }
     var dragCell by remember { mutableStateOf<Cell?>(null) }
 
+    // Without this the canvas -- which is the entire app -- is a blank
+    // rectangle to a screen reader. It cannot convey a spatial layout, but it
+    // can say what is on the board and where, which is more than nothing and
+    // is derived from the same state that is drawn.
+    val description = remember(board, selected) { describeBoard(board, selected) }
+
     Box(modifier.background(MaterialTheme.colorScheme.background)) {
         Canvas(
             Modifier
                 .fillMaxSize()
+                .semantics { contentDescription = description }
                 .pointerInput(board, cellPx) {
                     detectTapGestures { position ->
                         val cell = position.toCell(intCentre(size), pan, cellPx)
@@ -336,3 +345,26 @@ internal fun typeIconRes(type: NodeType): Int = when (type) {
     NodeType.NOTE -> R.drawable.ic_type_note
     NodeType.GROUP -> R.drawable.ic_type_group
 }
+
+/**
+ * What the canvas says to a screen reader.
+ *
+ * Deliberately capped: reading out sixty nodes is not accessibility, it is a
+ * denial of service. Past the cap it reports the count and stops.
+ */
+internal fun describeBoard(board: Board, selected: NodeId?): String {
+    if (board.isEmpty) return "Empty board. Describe what to create in the message box below."
+    val described = board.nodes.values
+        .sortedWith(compareBy({ it.cell.row }, { it.cell.col }))
+        .take(SPOKEN_NODE_LIMIT)
+        .joinToString(". ") { node ->
+            val where = "row ${node.cell.row}, column ${node.cell.col}"
+            val mark = if (node.id == selected) ", selected" else ""
+            "${node.type.name.lowercase()} ${node.label} at $where$mark"
+        }
+    val overflow = board.size - SPOKEN_NODE_LIMIT
+    val tail = if (overflow > 0) ". And $overflow more" else ""
+    return "Board with ${board.size} items. $described$tail"
+}
+
+private const val SPOKEN_NODE_LIMIT = 12

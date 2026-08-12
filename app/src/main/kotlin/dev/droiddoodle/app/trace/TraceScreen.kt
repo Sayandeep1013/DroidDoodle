@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +25,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import dev.droiddoodle.app.statusSuccess
+import dev.droiddoodle.app.statusWarning
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import dev.droiddoodle.agent.InferenceRound
@@ -109,8 +112,8 @@ private fun TurnRow(record: TraceRecord, onClick: () -> Unit) {
 @Composable
 private fun OutcomeBadge(outcome: Outcome) {
     val color = when (outcome) {
-        Outcome.OK -> Color(0xFF2E7D32)
-        Outcome.PARTIAL -> Color(0xFFEF6C00)
+        Outcome.OK -> statusSuccess()
+        Outcome.PARTIAL -> statusWarning()
         Outcome.REJECTED, Outcome.ABORTED -> MaterialTheme.colorScheme.error
         Outcome.AWAITING_CONFIRMATION -> MaterialTheme.colorScheme.outline
     }
@@ -131,27 +134,34 @@ private fun OutcomeBadge(outcome: Outcome) {
  */
 @Composable
 private fun TurnDetail(record: TraceRecord) {
+    // One item per section rather than one item holding all of them: a turn
+    // with three rounds carries three verbatim prompts, and composing all of
+    // them to show the OUTCOME line defeats the point of a lazy list.
     LazyColumn(contentPadding = PaddingValues(16.dp)) {
-        item {
-            Section("USER") { Mono(record.userMessage) }
+        item(key = "user") { Section("USER") { Mono(record.userMessage) } }
 
-            record.rounds.forEachIndexed { index, round ->
-                RoundSections(round, index, record.rounds.size)
-            }
+        itemsIndexed(record.rounds, key = { i, _ -> "round-$i" }) { index, round ->
+            RoundSections(round, index, record.rounds.size)
+        }
 
+        item(key = "plan") {
             Section("PLAN") {
                 if (record.plan.isEmpty()) Mono("(no plan)")
                 else record.plan.forEachIndexed { i, line -> Mono("${i + 1}  $line") }
             }
+        }
 
+        item(key = "validate") {
             Section("VALIDATE") {
                 Mono(
                     if (record.validation.passed) "passed"
                     else "FAILED · ${record.validation.error}",
                 )
             }
+        }
 
-            record.confirmation?.let { confirmation ->
+        record.confirmation?.let { confirmation ->
+            item(key = "confirm") {
                 Section("CONFIRM") {
                     Mono(
                         "required=${confirmation.required} granted=${confirmation.granted} " +
@@ -159,7 +169,9 @@ private fun TurnDetail(record: TraceRecord) {
                     )
                 }
             }
+        }
 
+        item(key = "exec") {
             Section("EXEC") {
                 if (record.steps.isEmpty()) Mono("(nothing executed)")
                 else record.steps.forEach { step ->
@@ -175,12 +187,16 @@ private fun TurnDetail(record: TraceRecord) {
                     step.error?.let { Mono("     $it") }
                 }
             }
+        }
 
+        item(key = "diff") {
             Section("DIFF") {
                 if (record.diff.isEmpty()) Mono("(board unchanged)")
                 else record.diff.forEach { Mono(it) }
             }
+        }
 
+        item(key = "outcome") {
             Section("OUTCOME") {
                 Mono(
                     "${record.outcome} · ${record.timings.totalMillis}ms total " +
@@ -190,13 +206,17 @@ private fun TurnDetail(record: TraceRecord) {
                         "execute ${record.timings.executeMillis})",
                 )
             }
+        }
 
+        item(key = "settings") {
             Section("SETTINGS") {
                 // The snapshot the turn actually ran under. A trace read weeks
                 // later is worthless if the settings have moved since.
                 record.settingsSnapshot.toSortedMap().forEach { (k, v) -> Mono("$k = $v") }
             }
+        }
 
+        item(key = "ids") {
             Section("IDS") {
                 Mono("turn ${record.turnId}")
                 Mono("strategy ${record.strategyId}")

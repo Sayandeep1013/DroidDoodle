@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import dev.droiddoodle.app.statusWarning
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
@@ -102,7 +103,7 @@ internal fun ResourceScreen(modifier: Modifier = Modifier) {
                 current.cpuPercentOfDevice,
             ),
             history = cpuHistory,
-            accent = Color(0xFFEF6C00),
+            accent = statusWarning(),
         ) {
             Line("cores", current.coreCount.toString())
             Line("thermal", current.thermal)

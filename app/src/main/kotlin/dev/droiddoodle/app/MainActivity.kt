@@ -37,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -71,8 +72,11 @@ internal fun AppScreen(vm: BoardViewModel, modelLabel: String) {
     val state by vm.state.collectAsStateWithLifecycle()
     val settings by vm.settings.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    var input by remember { mutableStateOf("") }
-    var screen by remember { mutableStateOf(Screen.CANVAS) }
+    // rememberSaveable, not remember: the activity declares configChanges so a
+    // rotation would not have lost these, but process death would, and coming
+    // back to a half-typed message on the wrong screen is a real annoyance.
+    var input by rememberSaveable { mutableStateOf("") }
+    var screen by rememberSaveable { mutableStateOf(Screen.CANVAS) }
     var menuOpen by remember { mutableStateOf(false) }
 
     // ui.cell_size sets the base zoom; the +/- controls adjust from there, so a
@@ -82,7 +86,7 @@ internal fun AppScreen(vm: BoardViewModel, modelLabel: String) {
         "large" -> 1.4f
         else -> 1.0f
     }
-    var zoom by remember { mutableFloatStateOf(1f) }
+    var zoom by rememberSaveable { mutableFloatStateOf(1f) }
 
     when (screen) {
         Screen.TRACE -> {

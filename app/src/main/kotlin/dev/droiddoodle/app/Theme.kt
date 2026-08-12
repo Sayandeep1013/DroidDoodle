@@ -35,6 +35,33 @@ internal fun DroidDoodleTheme(
 }
 
 /**
+ * Status colours, theme-aware.
+ *
+ * These exist because `MaterialTheme.colorScheme` has an `error` role but no
+ * "success" or "warning" one, and the obvious workaround -- a hardcoded
+ * `Color(0xFF2E7D32)` -- is a mid-dark green that lands at roughly 3:1 against
+ * this app's near-black background. Legible on the light theme, failing on the
+ * dark one, which is the theme most of this app is looked at in.
+ *
+ * Both pairs are lightened for dark mode rather than reused across it.
+ */
+@Composable
+internal fun statusSuccess(): Color =
+    if (MaterialTheme.colorScheme.background.luminanceIsDark()) {
+        Color(0xFF7BD88F)
+    } else {
+        Color(0xFF1B5E20)
+    }
+
+@Composable
+internal fun statusWarning(): Color =
+    if (MaterialTheme.colorScheme.background.luminanceIsDark()) {
+        Color(0xFFFFB86B)
+    } else {
+        Color(0xFF9A4A00)
+    }
+
+/**
  * Node palette. [NodeColor.DEFAULT] resolves per node **type** rather than to a
  * single neutral, so an unstyled board still reads as structured at a glance --
  * which is the whole point of a visual canvas.

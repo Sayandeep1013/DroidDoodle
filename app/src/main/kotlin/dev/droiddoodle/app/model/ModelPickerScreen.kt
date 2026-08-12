@@ -27,6 +27,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import dev.droiddoodle.app.statusSuccess
+import dev.droiddoodle.app.statusWarning
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -174,8 +176,8 @@ private fun CandidateCard(
                 },
                 style = MaterialTheme.typography.labelMedium,
                 color = when (row.fit) {
-                    Fit.COMFORTABLE -> Color(0xFF2E7D32)
-                    Fit.TIGHT -> Color(0xFFEF6C00)
+                    Fit.COMFORTABLE -> statusSuccess()
+                    Fit.TIGHT -> statusWarning()
                     Fit.EXCEEDS -> MaterialTheme.colorScheme.error
                 },
             )

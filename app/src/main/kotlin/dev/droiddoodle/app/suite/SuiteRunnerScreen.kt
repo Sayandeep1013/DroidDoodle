@@ -21,6 +21,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import dev.droiddoodle.app.statusSuccess
+import dev.droiddoodle.app.statusWarning
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -102,7 +104,7 @@ internal fun SuiteRunnerScreen(
                                 if (state.grammarViolations == 0) " — the grammar held" else " — GRAMMAR DEFECT",
                             style = MaterialTheme.typography.labelMedium,
                             color = if (state.grammarViolations == 0) {
-                                Color(0xFF2E7D32)
+                                statusSuccess()
                             } else {
                                 MaterialTheme.colorScheme.error
                             },
@@ -160,8 +162,8 @@ internal fun SuiteRunnerScreen(
                             style = MaterialTheme.typography.labelMedium,
                             color = when {
                                 row.grammarViolation -> MaterialTheme.colorScheme.error
-                                row.passed -> Color(0xFF2E7D32)
-                                else -> Color(0xFFEF6C00)
+                                row.passed -> statusSuccess()
+                                else -> statusWarning()
                             },
                         )
                     }
