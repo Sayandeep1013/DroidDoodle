@@ -35,6 +35,13 @@ internal fun DroidDoodleTheme(
 }
 
 /**
+ * Whether a colour reads as dark. Lives here rather than beside the canvas
+ * because both the canvas palette and the status colours branch on it.
+ */
+internal fun Color.luminanceIsDark(): Boolean =
+    (red * 0.299f + green * 0.587f + blue * 0.114f) < 0.5f
+
+/**
  * Status colours, theme-aware.
  *
  * These exist because `MaterialTheme.colorScheme` has an `error` role but no

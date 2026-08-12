@@ -332,7 +332,7 @@ private fun Offset.toCell(centre: Offset, pan: Offset, cellPx: Float): Cell {
     )
 }
 
-private fun Color.luminanceIsDark(): Boolean = (red * 0.299f + green * 0.587f + blue * 0.114f) < 0.5f
+
 
 /**
  * Icon per node type. Exhaustive `when` on purpose: adding a `NodeType` should
