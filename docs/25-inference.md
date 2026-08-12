@@ -155,6 +155,16 @@ The cache is invalidated when the model changes, the tool registry changes, or
 `model.context_tokens` changes. Prefix-reuse hit length is reported into
 `Timings` so the optimisation is measurable rather than assumed.
 
+> **Status: not implemented.** The JNI bridge clears the whole cache every turn
+> and re-prefills from scratch; `cachedPrefixTokens` is hard-wired to 0 and the
+> `Timings` field it feeds is therefore always zero, not merely low. This is
+> deliberate sequencing, not an oversight — an optimisation with no measured
+> baseline cannot be shown to have helped, and a subtly wrong prefix reuse
+> corrupts generation in ways that look like model weakness. It lands after P10
+> produces a latency baseline. **P8's acceptance criterion "prefix reuse is
+> non-zero on turn two" is consequently unmet and P8 cannot be signed off on
+> that line alone.**
+
 ## 5. llama.cpp binding
 
 - Built for `arm64-v8a` only, via CMake and the NDK, as a Gradle external native
@@ -162,8 +172,30 @@ The cache is invalidated when the model changes, the tool registry changes, or
 - Pinned to a specific llama.cpp commit, vendored as a git submodule. Pinning
   matters because GBNF behaviour and the GGUF format both change over time, and
   an unpinned upstream turns a reproducible experiment into a moving target.
-- The JNI surface is deliberately tiny: `loadModel`, `freeModel`,
-  `generateWithGrammar`, `tokenCount`, `cancel`.
+- The JNI surface is deliberately tiny. As built it is `backendInit`,
+  `loadModel`, `freeModel`, `tokenCount`, `generate` — still five functions, but
+  not the five this spec first listed. `generateWithGrammar` is just `generate`,
+  since every call is grammar-constrained and the qualifier says nothing.
+  `cancel` is gone: generation runs inside a coroutine and the decode loop
+  checks for cancellation between tokens, so cancelling the caller is enough and
+  a second cancellation channel would be a way for the two to disagree.
+  `backendInit` appeared because `llama_backend_init` is a real one-time step
+  that has to happen somewhere.
+- The bridge is pinned to a revision, and that pin has already earned itself:
+  the pinned commit is the one that replaced `llama_model_params.use_mmap` with
+  a `load_mode` enum. An unpinned build would have broken on an unrelated day
+  for an unrelated reason.
+- Loading uses `LLAMA_LOAD_MODE_MMAP`, not `AUTO` and not `MLOCK`. Mapping lets
+  the kernel evict model pages under memory pressure rather than the app being
+  killed; locking ~700MB resident on a ≤6GB device is a way to guarantee the
+  kill.
+- The sampler chain is grammar → top_p → temperature → dist, in that order, so
+  probability shaping only ever chooses among continuations the grammar already
+  permits. `llama_sampler_sample` accepts the sampled token internally; calling
+  `llama_sampler_accept` after it would advance the grammar state twice per
+  token and silently corrupt it.
+- llama and ggml are linked statically with `c++_static`, so the APK carries a
+  single `libdroiddoodle_llama.so`.
 - Threads default to `min(4, availableProcessors - 2)`, leaving headroom so the
   UI thread is not starved during decode.
 - No GPU or NNAPI backend in the MVP. On the target class of device the
@@ -218,9 +250,37 @@ The manifest schema is fixed now, so implementation is unblocked:
   "fileBytes": 0,
   "estimatedResidentBytes": 0,
   "contextTokens": 4096,
-  "promptTemplate": "chatml | llama3 | gemma | plain"
+  "promptTemplate": "chatml | llama3 | gemma | plain",
+  "note": "string, optional -- shown in the picker"
 }
 ```
+
+The file wraps this in `{ "schemaVersion": 1, "models": [ … ] }`. A manifest
+declaring a schema this build does not read is rejected whole; an individual
+entry that fails validation is dropped rather than defaulted, because a
+defaulted template or a malformed checksum costs a several-hundred-megabyte
+download before it fails.
+
+### What implementation found
+
+- **Google's own Gemma GGUF repositories are gated.** They require an accepted
+  licence and a bearer token, which an offline-first app with no account cannot
+  supply. The ungated `ggml-org` mirrors are used instead. Any future candidate
+  has to be checked for this before it goes in the manifest.
+- Every `sha256` and `fileBytes` in the shipped manifest was read from the
+  file's HuggingFace LFS pointer, so they are facts. `estimatedResidentBytes` is
+  a guess — file size plus a coarse KV allowance — and is labelled as such in
+  the manifest itself. Replacing those with device measurements is P10.
+- Resumption was verified against the CDN rather than assumed: a ranged request
+  answers `206 Partial Content` with a `Content-Range`.
+- Redirects are followed by hand. HttpURLConnection's automatic handling is not
+  specified to carry request headers across hops, and dropping `Range` silently
+  restarts a resumed download from zero. Doing it explicitly also enforces the
+  HTTPS-only rule at every hop rather than only the first.
+- The SHA-256 is computed by reading the finished file back, not accumulated
+  during transfer. A download resumed in a later process has no digest state to
+  continue from, and a re-read costs seconds against a transfer that costs
+  minutes.
 
 ### Prompt templates
 
@@ -228,3 +288,17 @@ Instruct models expect specific turn delimiters. `promptTemplate` selects a
 formatter applied around the assembled context. A mismatched template degrades
 output quality in ways easily mistaken for the model being weak, so the template
 in use is recorded in every trace.
+
+The formatter lives in `:inference` as `PromptTemplate`, and the **engine**
+applies it — not `:core-agent`, which under criterion L3 knows nothing about
+models beyond `LlmEngine`. Two consequences worth stating:
+
+- The whole assembled context goes in a single user turn. No template gains
+  anything from a separate system turn here, and Gemma has no system role at all.
+- No template writes a BOS token into the text. Tokenisation uses
+  `add_special = true`, which adds the correct one, or none for ChatML
+  tokenisers that set `add_bos_token=false`. A literal BOS would double it.
+- `LlamaEngine.contextTokens` reports the model window **minus** the tokenised
+  template envelope, measured once at load with the real tokeniser. Reporting
+  the raw window would let the context budget overspend by exactly the amount
+  the agent cannot see.

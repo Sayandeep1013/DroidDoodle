@@ -164,12 +164,38 @@ jobs:
             :app:assembleDebug 2>&1 \
             | tee "$RUNNER_TEMP/android.log"
 
+      # "The APK assembles with the native library" is a P8 acceptance criterion,
+      # and a successful build does not establish it -- a wrong abiFilter or a
+      # missing asset directory both produce a green build and a broken APK. So
+      # look inside. continue-on-error keeps the diagnostics push reachable.
+      - name: Inspect the APK
+        id: inspect
+        if: steps.assemble.outcome == 'success'
+        continue-on-error: true
+        run: |
+          set -e
+          APK="$(ls app/build/outputs/apk/debug/*.apk | head -1)"
+          {
+            echo "apk=$APK"
+            echo "bytes=$(stat -c%s "$APK")"
+            echo "--- native libraries and assets ---"
+            unzip -l "$APK" | grep -E 'lib/|assets/' || echo "NONE FOUND"
+          } > "$RUNNER_TEMP/apk-contents.txt"
+          cat "$RUNNER_TEMP/apk-contents.txt"
+          unzip -l "$APK" | grep -q 'lib/arm64-v8a/libdroiddoodle_llama.so' \
+            || { echo "the native library is missing from the APK"; exit 1; }
+          unzip -l "$APK" | grep -q 'assets/models.json' \
+            || { echo "the model manifest is missing from the APK"; exit 1; }
+
       - name: Publish Android diagnostics
         if: always()
         run: |
           set -e
           OUT="$RUNNER_TEMP/androidout"
           rm -rf "$OUT" && mkdir -p "$OUT"
+          if [ -f "$RUNNER_TEMP/apk-contents.txt" ]; then
+            cp "$RUNNER_TEMP/apk-contents.txt" "$OUT/apk-contents-${{ github.run_number }}.txt"
+          fi
           # CMake and ninja report in their own dialects, so the native build
           # needs patterns the Kotlin-only jvm job does not.
           grep -nE '^e: |^w: |error:|FAILED|FAILURE:|Caused by:|Execution failed|CMake Error|ninja: |undefined reference|No such file or directory' \
@@ -187,6 +213,23 @@ jobs:
             "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" \
             android-logs
 
+      # Actions artifacts need an authenticated download, and the development
+      # machine has no working `gh` (constraint C2's neighbour). A prerelease
+      # asset has a stable, unauthenticated URL, which is the only way an APK
+      # reaches a phone from here.
+      - name: Publish the APK as a rolling prerelease
+        if: steps.inspect.outcome == 'success' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          cp "$(ls app/build/outputs/apk/debug/*.apk | head -1)" droiddoodle-debug.apk
+          gh release delete dev-build --yes --cleanup-tag 2>/dev/null || true
+          gh release create dev-build droiddoodle-debug.apk \
+            --prerelease \
+            --title "Latest debug build" \
+            --notes "Automatic build of ${{ github.sha }}. Debug-signed, arm64-v8a only, no model bundled."
+
       - name: Upload APK
         if: steps.assemble.outcome == 'success'
         uses: actions/upload-artifact@v4
@@ -195,6 +238,6 @@ jobs:
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: warn
 
-      - name: Fail the job if the build failed
-        if: steps.assemble.outcome == 'failure'
+      - name: Fail the job if the build or the APK check failed
+        if: steps.assemble.outcome == 'failure' || steps.inspect.outcome == 'failure'
         run: exit 1

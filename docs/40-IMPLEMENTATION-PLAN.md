@@ -207,8 +207,12 @@ pinned.
 ## P9 — Trace UI and settings UI
 
 **Deliverable.** The turn list and turn detail screens of `24-trace.md` §4, JSON
-export, the settings screen generated from the registry, and the first-run model
-picker with memory-suitability verdicts.
+export, the settings screen generated from the registry, and a device-side
+Prompt Suite runner.
+
+The first-run model picker with memory-suitability verdicts **landed early, in
+P8**: the download flow is unusable without it, so deferring it would have meant
+shipping P8 with no way to exercise it.
 
 **Acceptance.**
 - Every field of `TraceRecord` is reachable in the UI.
@@ -216,6 +220,10 @@ picker with memory-suitability verdicts.
 - The settings screen is generated from the registry — adding a key adds a row
   with no UI change.
 - Agent-writable keys changed by `set_setting` visibly update the screen.
+- The suite runner executes all 33 cases of `31-prompt-suite.md` against the
+  loaded engine and reports, per case, pass or fail with the failure layer,
+  latency, and token counts — and reports grammar violations separately from
+  reasoning failures, since the two mean entirely different things.
 
 **Verification.** DEVICE.
 
@@ -263,7 +271,32 @@ P2, P3 and P4 are independent of each other once P1 lands.
 | P5 `:core-agent` | **verified — CI green** |
 | P6 Prompt Suite | **verified — CI green** |
 | P7 `:app` canvas | **builds — CI green**; DEVICE criteria unverified |
-| P8–P10 | not started |
+| P8 `:inference-llama` | **builds — CI green**; every DEVICE and MODEL criterion unverified, and one criterion deliberately unmet |
+| P9–P10 | not started |
+
+### What P8 has and has not established
+
+Established by CI: llama.cpp cross-compiles for `arm64-v8a` against the pinned
+revision; the JNI bridge compiles against the real headers; the APK contains
+`lib/arm64-v8a/libdroiddoodle_llama.so` and `assets/models.json`, checked by
+unzipping the artifact rather than inferred from a green build.
+
+Not established, because none of it can be without hardware: that a model
+downloads and checksums on a phone, that it loads, that a real turn produces a
+valid plan, and — the criterion that actually matters — that a full Prompt Suite
+run yields **zero grammar violations**. Until that last one runs against the
+real sampler, `PlanEnvelopeChecker` is validated only against itself.
+
+Deliberately unmet: **KV prefix reuse is not implemented.** The cache is cleared
+every turn and `cachedPrefixTokens` is always 0. See `25-inference.md` §4 for
+why this is sequenced after P10 rather than done now. P8 is therefore not
+signed off, and saying otherwise would be the kind of claim this project exists
+to avoid.
+
+One further gap the plan did not name: P10 requires Prompt Suite runs against a
+**real** engine, and the suite currently exists only as a JVM test driving
+`MockEngine`. A device-side MODEL-mode runner is undone work that P10 depends
+on, and it belongs in P9 alongside the other on-device screens.
 
 P7's remaining acceptance criteria — canvas renders each fixture correctly,
 drag snaps to the nearest free cell and is refused when none is free, a scripted
