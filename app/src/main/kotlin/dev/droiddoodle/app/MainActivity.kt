@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.ui.res.painterResource
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -147,34 +149,44 @@ internal fun AppScreen(vm: BoardViewModel, modelLabel: String) {
                     }
                 },
                 actions = {
-                    TextButton(onClick = vm::undo, enabled = state.canUndo) { Text("Undo") }
-                    TextButton(onClick = vm::redo, enabled = state.canRedo) { Text("Redo") }
+                    IconButton(onClick = vm::undo, enabled = state.canUndo) {
+                        Icon(painterResource(R.drawable.ic_undo), contentDescription = "Undo")
+                    }
+                    IconButton(onClick = vm::redo, enabled = state.canRedo) {
+                        Icon(painterResource(R.drawable.ic_redo), contentDescription = "Redo")
+                    }
                     IconButton(onClick = { menuOpen = true }) {
                         Icon(Icons.Filled.MoreVert, contentDescription = "More")
                     }
                     DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                         DropdownMenuItem(
                             text = { Text("Zoom in") },
+                            leadingIcon = { MenuIcon(R.drawable.ic_zoom_in) },
                             onClick = { zoom = (zoom + 0.2f).coerceAtMost(2.0f) },
                         )
                         DropdownMenuItem(
                             text = { Text("Zoom out") },
+                            leadingIcon = { MenuIcon(R.drawable.ic_zoom_out) },
                             onClick = { zoom = (zoom - 0.2f).coerceAtLeast(0.4f) },
                         )
                         DropdownMenuItem(
                             text = { Text("Trace") },
+                            leadingIcon = { MenuIcon(R.drawable.ic_trace) },
                             onClick = { menuOpen = false; screen = Screen.TRACE },
                         )
                         DropdownMenuItem(
                             text = { Text("Resources") },
+                            leadingIcon = { MenuIcon(R.drawable.ic_resources) },
                             onClick = { menuOpen = false; screen = Screen.RESOURCES },
                         )
                         DropdownMenuItem(
                             text = { Text("Prompt Suite") },
+                            leadingIcon = { MenuIcon(R.drawable.ic_suite) },
                             onClick = { menuOpen = false; screen = Screen.SUITE },
                         )
                         DropdownMenuItem(
                             text = { Text("Settings") },
+                            leadingIcon = { Icon(Icons.Filled.Settings, null) },
                             onClick = { menuOpen = false; screen = Screen.SETTINGS },
                         )
                     }
@@ -282,4 +294,10 @@ internal fun AppScreen(vm: BoardViewModel, modelLabel: String) {
             dismissButton = { TextButton(onClick = vm::dismissPending) { Text("Cancel") } },
         )
     }
+}
+
+/** A vendored drawable at menu-icon size. See docs/THIRD-PARTY.md. */
+@Composable
+private fun MenuIcon(resId: Int) {
+    Icon(painterResource(resId), contentDescription = null)
 }

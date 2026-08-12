@@ -231,18 +231,44 @@ jobs:
       # machine has no working `gh` (constraint C2's neighbour). A prerelease
       # asset has a stable, unauthenticated URL, which is the only way an APK
       # reaches a phone from here.
-      - name: Publish the APK as a rolling prerelease
+      # A full release, not a prerelease: a prerelease is hidden from the repo's
+      # "Latest" badge and from /releases/latest, which made the APK look
+      # missing when it was attached all along.
+      - name: Publish the APKs to the latest release
         if: steps.inspect.outcome == 'success' && github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
-          cp "$(ls app/build/outputs/apk/debug/*.apk | head -1)" droiddoodle-debug.apk
+          cp "$(ls app/build/outputs/apk/release/*.apk | head -1)" DroidDoodle.apk
+          cp "$(ls app/build/outputs/apk/debug/*.apk | head -1)" DroidDoodle-debug.apk
+
+          cat > notes.md <<'NOTES'
+          **[⬇ Download DroidDoodle.apk](https://github.com/Sayandeep1013/DroidDoodle/releases/latest/download/DroidDoodle.apk)**
+
+          Rebuilt automatically from every green commit on `main`.
+
+          - `DroidDoodle.apk` — the release build. Install this one.
+          - `DroidDoodle-debug.apk` — same app, plus the debug-only option to
+            skip the model picker and drive a scripted engine.
+
+          **arm64-v8a only**, so it needs a real phone; a standard x86_64
+          emulator will refuse to install it. No model is bundled — the app
+          downloads one on first run and then never touches the network again.
+
+          Signed with the Android debug key, so Android will warn about an
+          unknown developer. That is expected for a build that is not going
+          through Play.
+          NOTES
+          printf '\nBuilt from %s\n' "${{ github.sha }}" >> notes.md
+
+          gh release delete latest --yes --cleanup-tag 2>/dev/null || true
+          gh release create latest DroidDoodle.apk DroidDoodle-debug.apk \
+            --title "DroidDoodle — latest build" \
+            --notes-file notes.md
+          # The old prerelease tag would otherwise sit above this one in the
+          # list, still labelled "Latest debug build".
           gh release delete dev-build --yes --cleanup-tag 2>/dev/null || true
-          gh release create dev-build droiddoodle-debug.apk \
-            --prerelease \
-            --title "Latest debug build" \
-            --notes "Automatic build of ${{ github.sha }}. Debug-signed, arm64-v8a only, no model bundled."
 
       - name: Upload APK
         if: steps.assemble.outcome == 'success'

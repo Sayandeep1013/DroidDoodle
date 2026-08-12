@@ -15,7 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.VectorPainter
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
@@ -30,6 +36,7 @@ import dev.droiddoodle.model.Cell
 import dev.droiddoodle.model.EdgeType
 import dev.droiddoodle.model.NodeId
 import dev.droiddoodle.model.NodeSize
+import dev.droiddoodle.model.NodeType
 import dev.droiddoodle.world.Board
 import androidx.compose.foundation.Canvas
 import kotlin.math.roundToInt
@@ -57,6 +64,11 @@ internal fun BoardCanvas(
 ) {
     val dark = MaterialTheme.colorScheme.background.luminanceIsDark()
     val measurer = rememberTextMeasurer()
+    // Built once in composition; a VectorPainter cannot be created inside a
+    // DrawScope, so the draw pass receives them ready-made.
+    val typeIcons: Map<NodeType, VectorPainter> = NodeType.entries.associateWith { type ->
+        rememberVectorPainter(ImageVector.vectorResource(typeIconRes(type)))
+    }
     val density = LocalDensity.current
     val cellPx = with(density) { (BASE_CELL_DP * scale).dp.toPx() }
 
@@ -109,7 +121,7 @@ internal fun BoardCanvas(
             if (gridVisible) drawGrid(centre, pan, cellPx, gridLine(dark))
             drawHulls(board, centre, pan, cellPx, hullTint(dark))
             drawEdges(board, centre, pan, cellPx, nodeStroke(dark))
-            drawNodes(board, centre, pan, cellPx, selected, dragging, dark, measurer)
+            drawNodes(board, centre, pan, cellPx, selected, dragging, dark, measurer, typeIcons)
             dragCell?.takeIf { dragging != null }?.let { target ->
                 drawDropTarget(target, centre, pan, cellPx, board, dragging)
             }
@@ -190,6 +202,7 @@ private fun DrawScope.drawNodes(
     dragging: NodeId?,
     dark: Boolean,
     measurer: TextMeasurer,
+    typeIcons: Map<NodeType, VectorPainter>,
 ) {
     for (node in board.nodes.values.sortedBy { it.cell.row }) {
         val scale = when (node.style.size) {
@@ -228,6 +241,29 @@ private fun DrawScope.drawNodes(
         )
 
         if (cellPx < 44f) continue
+
+        // The type icon carries what the label cannot: a glance at the board
+        // should show its shape -- places, characters, objects -- without
+        // reading a word of it. Below 60px there is no room for both, and the
+        // label wins because it is the part that is not guessable.
+        val iconPainter = typeIcons[node.type]
+        val roomForIcon = cellPx >= 60f && iconPainter != null
+        var labelCentre = at
+        if (roomForIcon && iconPainter != null) {
+            val iconSize = (half * 0.62f).coerceIn(12f, 34f)
+            val iconTop = at.y - half + half * 0.22f
+            translate(left = at.x - iconSize / 2f, top = iconTop) {
+                with(iconPainter) {
+                    draw(
+                        size = Size(iconSize, iconSize),
+                        alpha = 0.85f,
+                        colorFilter = ColorFilter.tint(nodeStroke(dark)),
+                    )
+                }
+            }
+            labelCentre = at + Offset(0f, iconSize * 0.42f)
+        }
+
         val label = measurer.measure(
             text = node.label,
             style = TextStyle(
@@ -242,7 +278,7 @@ private fun DrawScope.drawNodes(
         )
         drawText(
             textLayoutResult = label,
-            topLeft = at - Offset(label.size.width / 2f, label.size.height / 2f),
+            topLeft = labelCentre - Offset(label.size.width / 2f, label.size.height / 2f),
         )
     }
 }
@@ -289,3 +325,15 @@ private fun Offset.toCell(centre: Offset, pan: Offset, cellPx: Float): Cell {
 }
 
 private fun Color.luminanceIsDark(): Boolean = (red * 0.299f + green * 0.587f + blue * 0.114f) < 0.5f
+
+/**
+ * Icon per node type. Exhaustive `when` on purpose: adding a `NodeType` should
+ * fail to compile here rather than silently render an untyped box.
+ */
+internal fun typeIconRes(type: NodeType): Int = when (type) {
+    NodeType.PLACE -> R.drawable.ic_type_place
+    NodeType.CHARACTER -> R.drawable.ic_type_character
+    NodeType.OBJECT -> R.drawable.ic_type_object
+    NodeType.NOTE -> R.drawable.ic_type_note
+    NodeType.GROUP -> R.drawable.ic_type_group
+}
