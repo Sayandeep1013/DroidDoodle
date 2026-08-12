@@ -4,6 +4,10 @@
   https://github.com/google/material-design-icons
   See docs/THIRD-PARTY.md. Do not hand-edit; regenerate instead.
 
+  No android:tint: ?attr/colorControlNormal is an AppCompat attribute and this
+  is a pure-Compose app with no AppCompat theme. Compose's Icon and the canvas
+  both apply their own tint, so the drawable ships white and untinted.
+
   The group translation compensates for the source viewBox "0 -960 960 960",
   whose negative Y origin VectorDrawable cannot express.
 -->
@@ -11,8 +15,7 @@
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="960"
-    android:viewportHeight="960"
-    android:tint="?attr/colorControlNormal">
+    android:viewportHeight="960">
     <group android:translateY="960">
         <path
             android:fillColor="@android:color/white"

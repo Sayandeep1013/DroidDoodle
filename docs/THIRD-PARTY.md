@@ -11,21 +11,28 @@ fetched.
 - **Licence:** Apache License 2.0
 - **Where:** `app/src/main/res/drawable/ic_*.xml`
 
-Nine outlined symbols — `castle`, `person`, `inventory_2`, `sticky_note_2`,
-`workspaces`, `memory`, `science`, `receipt_long`, `download` — converted from
-the upstream SVGs to Android `VectorDrawable`.
+Thirteen outlined symbols — `castle`, `person`, `inventory_2`, `sticky_note_2`,
+`workspaces`, `memory`, `science`, `receipt_long`, `download`, `undo`, `redo`,
+`add`, `remove` — converted from the upstream SVGs to Android `VectorDrawable`.
 
-Two notes on the conversion:
+Undo, redo and the zoom glyphs are vendored rather than taken from
+`Icons.Filled`: `material-icons-core` carries only a subset, and discovering a
+missing symbol costs a CI round trip.
+
+Three notes on the conversion:
 
 - Material Symbols ship with the viewBox `0 -960 960 960`, whose negative Y
   origin `VectorDrawable` cannot express. Each path is wrapped in a group
   translated by `+960`, which maps it back into `0..960`.
+- They carry **no `android:tint`**. `?attr/colorControlNormal` is an AppCompat
+  attribute and this is a pure-Compose app with no AppCompat theme, so aapt
+  cannot resolve it. Compose's `Icon` and the canvas apply their own tint.
 - They are **committed, not downloaded at runtime**. Constraint C3 says the app
   performs no network I/O after the model download, and fetching an icon at
   first launch would break that guarantee for the sake of two kilobytes.
 
-Regenerate with `scratchpad/icons.py` rather than hand-editing; the files carry
-a header saying so.
+Regenerate with `tools/fetch-icons.py` rather than hand-editing; the files
+carry a header saying so.
 
 ## llama.cpp
 
