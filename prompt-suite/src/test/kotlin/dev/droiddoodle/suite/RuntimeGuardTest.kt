@@ -1,5 +1,7 @@
 package dev.droiddoodle.suite
 
+import dev.droiddoodle.agent.Outcome
+import dev.droiddoodle.agent.ReferenceTable
 import dev.droiddoodle.model.NodeType
 import dev.droiddoodle.model.SettingKeys
 import dev.droiddoodle.model.SettingsSnapshot
