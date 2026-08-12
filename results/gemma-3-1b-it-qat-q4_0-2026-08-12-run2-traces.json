@@ -1,0 +1,2807 @@
+{
+    "schemaVersion": 1,
+    "turns": [
+        {
+            "schemaVersion": 1,
+            "turnId": "create-01-1",
+            "startedAtMillis": 1786542180557,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "create a village",
+            "outcome": "REJECTED",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nboard: empty\n\n> create a village",
+                    "promptTokens": 536,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 4,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 5
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#e2cd",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"move_node\",\"args\":{\"node\":\"$1\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 41,
+                    "prefillMillis": 12129,
+                    "decodeMillis": 6524,
+                    "cachedPrefixTokens": 0,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [],
+            "validation": {
+                "passed": false,
+                "error": "step 1 argument 'node' refers to $1, which has not run yet"
+            },
+            "steps": [],
+            "diff": [],
+            "timings": {
+                "totalMillis": 18691,
+                "assembleMillis": 14,
+                "grammarMillis": 3,
+                "inferenceMillis": 18672,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "create-02-1",
+            "startedAtMillis": 1786542199248,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "make a note that says grappling hook",
+            "outcome": "REJECTED",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nboard: empty\n\n> make a note that says grappling hook",
+                    "promptTokens": 540,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 4,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 9
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#e2cd",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"move_node\",\"args\":{\"node\":\"$1\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 44,
+                    "prefillMillis": 337,
+                    "decodeMillis": 7650,
+                    "cachedPrefixTokens": 528,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [],
+            "validation": {
+                "passed": false,
+                "error": "step 1 argument 'node' refers to $1, which has not run yet"
+            },
+            "steps": [],
+            "diff": [],
+            "timings": {
+                "totalMillis": 8007,
+                "assembleMillis": 12,
+                "grammarMillis": 1,
+                "inferenceMillis": 7994,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "create-03-1",
+            "startedAtMillis": 1786542207256,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "add a castle",
+            "outcome": "REJECTED",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> add a castle",
+                    "promptTokens": 586,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 5
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"move_node\",\"args\":{\"node\":\"n1\",\"to\":{\"auto\":true}}},{\"tool\":\"set_setting\",\"args\":{\"key\":\"agent.auto_repair\",\"value\":\"n3\"}}]}",
+                    "outputTokens": 85,
+                    "prefillMillis": 1625,
+                    "decodeMillis": 13944,
+                    "cachedPrefixTokens": 523,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "move_node",
+                "set_setting"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "move_node",
+                    "args": "{\"node\":\"n1\",\"to\":{\"auto\":true}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                },
+                {
+                    "index": 2,
+                    "tool": "set_setting",
+                    "args": "{\"key\":\"agent.auto_repair\",\"value\":\"n3\"}",
+                    "resolvedRefs": {},
+                    "result": "FAILED",
+                    "error": "'agent.auto_repair' must be true or false, got 'n3'",
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [],
+            "timings": {
+                "totalMillis": 15584,
+                "assembleMillis": 6,
+                "grammarMillis": 1,
+                "inferenceMillis": 15576,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "multi-01-1",
+            "startedAtMillis": 1786542222841,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "create a village with a tavern and a blacksmith",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nboard: empty\n\n> create a village with a tavern and a blacksmith",
+                    "promptTokens": 542,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 4,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 11
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#e2cd",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"create_node\",\"args\":{\"type\":\"PLACE\",\"label\":\"village\",\"kind\":\"PLACE\",\"at\":{\"cell\":{\"row\":0,\"col\":0}},\"attributes\":{}}}]}",
+                    "outputTokens": 60,
+                    "prefillMillis": 512,
+                    "decodeMillis": 9357,
+                    "cachedPrefixTokens": 523,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "create_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "create_node",
+                    "args": "{\"type\":\"PLACE\",\"label\":\"village\",\"kind\":\"PLACE\",\"at\":{\"cell\":{\"row\":0,\"col\":0}},\"attributes\":{}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 1
+                }
+            ],
+            "diff": [
+                "created place \"village\" at r0c0"
+            ],
+            "timings": {
+                "totalMillis": 9891,
+                "assembleMillis": 11,
+                "grammarMillis": 1,
+                "inferenceMillis": 9878,
+                "executeMillis": 1
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "multi-02-1",
+            "startedAtMillis": 1786542232732,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "make a dungeon with three rooms",
+            "outcome": "REJECTED",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nboard: empty\n\n> make a dungeon with three rooms",
+                    "promptTokens": 539,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 4,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 8
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#e2cd",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"move_node\",\"args\":{\"node\":\"$1\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 41,
+                    "prefillMillis": 312,
+                    "decodeMillis": 6829,
+                    "cachedPrefixTokens": 528,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [],
+            "validation": {
+                "passed": false,
+                "error": "step 1 argument 'node' refers to $1, which has not run yet"
+            },
+            "steps": [],
+            "diff": [],
+            "timings": {
+                "totalMillis": 7154,
+                "assembleMillis": 5,
+                "grammarMillis": 1,
+                "inferenceMillis": 7147,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "multi-03-1",
+            "startedAtMillis": 1786542239886,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "add a forest north of the village and a river between them",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> add a forest north of the village and a river between them",
+                    "promptTokens": 595,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 14
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"move_node\",\"args\":{\"node\":\"n1\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 41,
+                    "prefillMillis": 2028,
+                    "decodeMillis": 6800,
+                    "cachedPrefixTokens": 523,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "move_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "move_node",
+                    "args": "{\"node\":\"n1\",\"to\":{\"auto\":true}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 1
+                }
+            ],
+            "diff": [],
+            "timings": {
+                "totalMillis": 8851,
+                "assembleMillis": 12,
+                "grammarMillis": 1,
+                "inferenceMillis": 8837,
+                "executeMillis": 1
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "multi-04-1",
+            "startedAtMillis": 1786542248737,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "create five frogs",
+            "outcome": "REJECTED",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nboard: empty\n\n> create five frogs",
+                    "promptTokens": 536,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 4,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 5
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#e2cd",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"move_node\",\"args\":{\"node\":\"$1\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 40,
+                    "prefillMillis": 472,
+                    "decodeMillis": 6894,
+                    "cachedPrefixTokens": 523,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [],
+            "validation": {
+                "passed": false,
+                "error": "step 1 argument 'node' refers to $1, which has not run yet"
+            },
+            "steps": [],
+            "diff": [],
+            "timings": {
+                "totalMillis": 7385,
+                "assembleMillis": 10,
+                "grammarMillis": 1,
+                "inferenceMillis": 7374,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "modify-01-1",
+            "startedAtMillis": 1786542256122,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "make the blacksmith secretly a vampire",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> make the blacksmith secretly a vampire",
+                    "promptTokens": 589,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 8
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"update_node\",\"args\":{\"node\":\"n3\",\"label\":\"Borin\",\"kind\":\"char\",\"set\":{\"attribute\":\"color\",\"value\":\"red\"}}}]}",
+                    "outputTokens": 56,
+                    "prefillMillis": 2453,
+                    "decodeMillis": 11548,
+                    "cachedPrefixTokens": 523,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "update_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "update_node",
+                    "args": "{\"node\":\"n3\",\"label\":\"Borin\",\"kind\":\"char\",\"set\":{\"attribute\":\"color\",\"value\":\"red\"}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [
+                "updated \"Borin\": kind is now \"char\"; attribute=color, value=red"
+            ],
+            "timings": {
+                "totalMillis": 14018,
+                "assembleMillis": 8,
+                "grammarMillis": 0,
+                "inferenceMillis": 14009,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "modify-02-1",
+            "startedAtMillis": 1786542270141,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "rename the tavern to The Rusty Anchor",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> rename the tavern to The Rusty Anchor",
+                    "promptTokens": 590,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 9
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"update_node\",\"args\":{\"node\":\"n2\",\"label\":\"The Rusty Anchor\",\"kind\":\"tavern\",\"set\":{}}}]}",
+                    "outputTokens": 46,
+                    "prefillMillis": 431,
+                    "decodeMillis": 8806,
+                    "cachedPrefixTokens": 578,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "update_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "update_node",
+                    "args": "{\"node\":\"n2\",\"label\":\"The Rusty Anchor\",\"kind\":\"tavern\",\"set\":{}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [
+                "updated \"The Rusty Anchor\": renamed to \"The Rusty Anchor\"; kind is now \"tavern\""
+            ],
+            "timings": {
+                "totalMillis": 9262,
+                "assembleMillis": 13,
+                "grammarMillis": 1,
+                "inferenceMillis": 9247,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "modify-03-1",
+            "startedAtMillis": 1786542279403,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "make the village blue",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> make the village blue",
+                    "promptTokens": 587,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 6
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"update_node\",\"args\":{\"node\":\"n1\",\"label\":\"Village\",\"kind\":\"blue\",\"set\":{}}}]}",
+                    "outputTokens": 49,
+                    "prefillMillis": 365,
+                    "decodeMillis": 9182,
+                    "cachedPrefixTokens": 578,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "update_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "update_node",
+                    "args": "{\"node\":\"n1\",\"label\":\"Village\",\"kind\":\"blue\",\"set\":{}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [
+                "updated \"Village\": kind is now \"blue\""
+            ],
+            "timings": {
+                "totalMillis": 9566,
+                "assembleMillis": 10,
+                "grammarMillis": 1,
+                "inferenceMillis": 9555,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "move-02-1",
+            "startedAtMillis": 1786542288970,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "put the castle north of the village",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\nn4 place \"Castle\" @2,2\ne n1>n2 contains, n1>n3 contains\n\n> put the castle north of the village",
+                    "promptTokens": 601,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 65,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 9
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#0b7d",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"move_node\",\"args\":{\"node\":\"n3\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 43,
+                    "prefillMillis": 1351,
+                    "decodeMillis": 7324,
+                    "cachedPrefixTokens": 562,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "move_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "move_node",
+                    "args": "{\"node\":\"n3\",\"to\":{\"auto\":true}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [
+                "moved \"Borin\" from r1c0 to r1c1"
+            ],
+            "timings": {
+                "totalMillis": 8692,
+                "assembleMillis": 7,
+                "grammarMillis": 1,
+                "inferenceMillis": 8683,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "move-03-1",
+            "startedAtMillis": 1786542297662,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "move the tavern west of the village",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> move the tavern west of the village",
+                    "promptTokens": 590,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 9
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"move_node\",\"args\":{\"node\":\"n2\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 43,
+                    "prefillMillis": 727,
+                    "decodeMillis": 7174,
+                    "cachedPrefixTokens": 562,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "move_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "move_node",
+                    "args": "{\"node\":\"n2\",\"to\":{\"auto\":true}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [
+                "moved \"Tavern\" from r0c1 to r-1c-1"
+            ],
+            "timings": {
+                "totalMillis": 7923,
+                "assembleMillis": 12,
+                "grammarMillis": 1,
+                "inferenceMillis": 7909,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "move-04-1",
+            "startedAtMillis": 1786542305585,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "move the tavern north of the village",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn4 obj \"filler1\" @-1,-1\nn5 obj \"filler2\" @-1,0\nn6 obj \"filler3\" @-1,1\nn7 obj \"filler4\" @0,-1\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn8 obj \"filler5\" @1,-1\nn3 char \"Borin\" ~blacksmith @1,0\nn9 obj \"filler6\" @1,1\ne n1>n2 contains, n1>n3 contains\n\n> move the tavern north of the village",
+                    "promptTokens": 665,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 129,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 9
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#8c1c",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"move_node\",\"args\":{\"node\":\"n1\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 39,
+                    "prefillMillis": 4383,
+                    "decodeMillis": 6403,
+                    "cachedPrefixTokens": 524,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "move_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "move_node",
+                    "args": "{\"node\":\"n1\",\"to\":{\"auto\":true}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [],
+            "timings": {
+                "totalMillis": 10809,
+                "assembleMillis": 12,
+                "grammarMillis": 1,
+                "inferenceMillis": 10796,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "connect-02-1",
+            "startedAtMillis": 1786542316395,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "connect the tavern to the blacksmith",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> connect the tavern to the blacksmith",
+                    "promptTokens": 589,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 8
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"connect\",\"args\":{\"from\":\"n1\",\"to\":\"n3\",\"relation\":\"BLOCKS\"}},{\"tool\":\"move_node\",\"args\":{\"node\":\"n3\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 75,
+                    "prefillMillis": 2403,
+                    "decodeMillis": 12249,
+                    "cachedPrefixTokens": 524,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "connect",
+                "move_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "connect",
+                    "args": "{\"from\":\"n1\",\"to\":\"n3\",\"relation\":\"BLOCKS\"}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                },
+                {
+                    "index": 2,
+                    "tool": "move_node",
+                    "args": "{\"node\":\"n3\",\"to\":{\"auto\":true}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [
+                "linked n1 blocks n3 (\"Borin\")",
+                "moved \"Borin\" from r1c0 to r-1c-1"
+            ],
+            "timings": {
+                "totalMillis": 14673,
+                "assembleMillis": 10,
+                "grammarMillis": 1,
+                "inferenceMillis": 14662,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "connect-03-1",
+            "startedAtMillis": 1786542331069,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "the blacksmith owns the tavern",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> the blacksmith owns the tavern",
+                    "promptTokens": 588,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 7
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"update_node\",\"args\":{\"node\":\"n1\",\"label\":\"Tavern\",\"kind\":\"contains\",\"set\":{\"color\":\"black\",\"size\":\"medium\"}}}]}",
+                    "outputTokens": 58,
+                    "prefillMillis": 303,
+                    "decodeMillis": 12563,
+                    "cachedPrefixTokens": 578,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "update_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "update_node",
+                    "args": "{\"node\":\"n1\",\"label\":\"Tavern\",\"kind\":\"contains\",\"set\":{\"color\":\"black\",\"size\":\"medium\"}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [
+                "updated \"Tavern\": renamed to \"Tavern\"; kind is now \"contains\"; color=black, size=medium"
+            ],
+            "timings": {
+                "totalMillis": 12880,
+                "assembleMillis": 5,
+                "grammarMillis": 1,
+                "inferenceMillis": 12873,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "connect-01-1",
+            "startedAtMillis": 1786542343949,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "the blacksmith is afraid of frogs",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> the blacksmith is afraid of frogs",
+                    "promptTokens": 589,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 8
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"update_node\",\"args\":{\"node\":\"n1\",\"label\":\"Village\",\"kind\":\"place\",\"set\":{}}}]}",
+                    "outputTokens": 48,
+                    "prefillMillis": 341,
+                    "decodeMillis": 9754,
+                    "cachedPrefixTokens": 580,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "update_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "update_node",
+                    "args": "{\"node\":\"n1\",\"label\":\"Village\",\"kind\":\"place\",\"set\":{}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [
+                "updated \"Village\": kind is now \"place\""
+            ],
+            "timings": {
+                "totalMillis": 10110,
+                "assembleMillis": 6,
+                "grammarMillis": 0,
+                "inferenceMillis": 10104,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "delete-01-1",
+            "startedAtMillis": 1786542354060,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "delete the tavern",
+            "outcome": "AWAITING_CONFIRMATION",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> delete the tavern",
+                    "promptTokens": 586,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 5
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"delete_node\",\"args\":{\"node\":\"n2\"}},{\"tool\":\"delete_node\",\"args\":{\"node\":\"n1\"}}]}",
+                    "outputTokens": 55,
+                    "prefillMillis": 251,
+                    "decodeMillis": 10225,
+                    "cachedPrefixTokens": 578,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "delete_node",
+                "delete_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "confirmation": {
+                "required": true,
+                "granted": false,
+                "affectedNodes": [
+                    "n2",
+                    "n1",
+                    "n3"
+                ]
+            },
+            "steps": [],
+            "diff": [],
+            "timings": {
+                "totalMillis": 10492,
+                "assembleMillis": 6,
+                "grammarMillis": 0,
+                "inferenceMillis": 10485,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "delete-02-1",
+            "startedAtMillis": 1786542364552,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "delete the village",
+            "outcome": "AWAITING_CONFIRMATION",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> delete the village",
+                    "promptTokens": 586,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 5
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"delete_node\",\"args\":{\"node\":\"n1\"}},{\"tool\":\"delete_node\",\"args\":{\"node\":\"n2\"}},{\"tool\":\"delete_node\",\"args\":{\"node\":\"n3\"}}]}",
+                    "outputTokens": 82,
+                    "prefillMillis": 202,
+                    "decodeMillis": 14943,
+                    "cachedPrefixTokens": 580,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "delete_node",
+                "delete_node",
+                "delete_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "confirmation": {
+                "required": true,
+                "granted": false,
+                "affectedNodes": [
+                    "n1",
+                    "n2",
+                    "n3"
+                ]
+            },
+            "steps": [],
+            "diff": [],
+            "timings": {
+                "totalMillis": 15159,
+                "assembleMillis": 6,
+                "grammarMillis": 1,
+                "inferenceMillis": 15151,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "delete-02b-1",
+            "startedAtMillis": 1786542379711,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "delete the village",
+            "outcome": "PARTIAL",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> delete the village",
+                    "promptTokens": 586,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 5
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"delete_node\",\"args\":{\"node\":\"n1\"}},{\"tool\":\"delete_node\",\"args\":{\"node\":\"n2\"}},{\"tool\":\"delete_node\",\"args\":{\"node\":\"n3\"}}]}",
+                    "outputTokens": 82,
+                    "prefillMillis": 97,
+                    "decodeMillis": 15731,
+                    "cachedPrefixTokens": 585,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "delete_node",
+                "delete_node",
+                "delete_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "confirmation": {
+                "required": true,
+                "granted": true,
+                "affectedNodes": [
+                    "n1",
+                    "n2",
+                    "n3"
+                ]
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "delete_node",
+                    "args": "{\"node\":\"n1\"}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                },
+                {
+                    "index": 2,
+                    "tool": "delete_node",
+                    "args": "{\"node\":\"n2\"}",
+                    "resolvedRefs": {},
+                    "result": "FAILED",
+                    "error": "no node called n2",
+                    "durationMillis": 1
+                },
+                {
+                    "index": 3,
+                    "tool": "delete_node",
+                    "args": "{\"node\":\"n3\"}",
+                    "resolvedRefs": {},
+                    "result": "SKIPPED",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [
+                "deleted \"Village\"",
+                "deleted \"Tavern\" (contained by \"Village\")",
+                "deleted \"Borin\" (contained by \"Village\")"
+            ],
+            "timings": {
+                "totalMillis": 15847,
+                "assembleMillis": 9,
+                "grammarMillis": 0,
+                "inferenceMillis": 15837,
+                "executeMillis": 1
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "delete-03-1",
+            "startedAtMillis": 1786542395558,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "delete everything except the village",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\nn5 obj \"far1\" @5,6\nn6 obj \"far2\" @5,7\nn7 obj \"far3\" @5,8\nn8 obj \"far4\" @5,9\nn10 obj \"far6\" @6,5\nn11 obj \"far7\" @6,6\nn12 obj \"far8\" @6,7\nn13 obj \"far9\" @6,8\nn14 obj \"far10\" @6,9\nn16 obj \"far12\" @7,5\nn17 obj \"far13\" @7,6\nn18 obj \"far14\" @7,7\nn19 obj \"far15\" @7,8\nn20 obj \"far16\" @7,9\nn4 char \"Dragon\" ~dragon @9,9\ne n1>n2 contains, n1>n3 contains\n\n> delete everything except the village",
+                    "promptTokens": 785,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 251,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 7
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#b621",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"move_node\",\"args\":{\"node\":\"n1\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 44,
+                    "prefillMillis": 6909,
+                    "decodeMillis": 8276,
+                    "cachedPrefixTokens": 562,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "move_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "move_node",
+                    "args": "{\"node\":\"n1\",\"to\":{\"auto\":true}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [
+                "moved \"Village\" from r0c0 to r4c6"
+            ],
+            "timings": {
+                "totalMillis": 15213,
+                "assembleMillis": 15,
+                "grammarMillis": 1,
+                "inferenceMillis": 15197,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "anaph-01-1",
+            "startedAtMillis": 1786542410772,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "make it red",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\nn4 place \"Castle\" @2,2\ne n1>n2 contains, n1>n3 contains\n\nrefs: last_created=n4\n\n> make it red",
+                    "promptTokens": 606,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 65,
+                        "refs": 9,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 5
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#0b7d",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"update_node\",\"args\":{\"node\":\"n1\",\"label\":\"Red\",\"kind\":\"smith\",\"set\":{}}}]}",
+                    "outputTokens": 48,
+                    "prefillMillis": 1122,
+                    "decodeMillis": 8656,
+                    "cachedPrefixTokens": 563,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "update_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "update_node",
+                    "args": "{\"node\":\"n1\",\"label\":\"Red\",\"kind\":\"smith\",\"set\":{}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [
+                "updated \"Red\": renamed to \"Red\"; kind is now \"smith\""
+            ],
+            "timings": {
+                "totalMillis": 9798,
+                "assembleMillis": 9,
+                "grammarMillis": 1,
+                "inferenceMillis": 9786,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "anaph-02-1",
+            "startedAtMillis": 1786542420570,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "move that west of the village",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\nn4 place \"Castle\" @2,2\ne n1>n2 contains, n1>n3 contains\n\nrefs: last_created=n4\n\n> move that west of the village",
+                    "promptTokens": 609,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 65,
+                        "refs": 9,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 8
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#0b7d",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"move_node\",\"args\":{\"node\":\"n1\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 44,
+                    "prefillMillis": 329,
+                    "decodeMillis": 8940,
+                    "cachedPrefixTokens": 598,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "move_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "move_node",
+                    "args": "{\"node\":\"n1\",\"to\":{\"auto\":true}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [
+                "moved \"Village\" from r0c0 to r1c1"
+            ],
+            "timings": {
+                "totalMillis": 9285,
+                "assembleMillis": 6,
+                "grammarMillis": 1,
+                "inferenceMillis": 9277,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "arrange-01-1",
+            "startedAtMillis": 1786542429855,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "line up the characters in a row",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\nn5 obj \"far1\" @5,6\nn6 obj \"far2\" @5,7\nn7 obj \"far3\" @5,8\nn8 obj \"far4\" @5,9\nn10 obj \"far6\" @6,5\nn11 obj \"far7\" @6,6\nn12 obj \"far8\" @6,7\nn13 obj \"far9\" @6,8\nn14 obj \"far10\" @6,9\nn16 obj \"far12\" @7,5\nn17 obj \"far13\" @7,6\nn18 obj \"far14\" @7,7\nn19 obj \"far15\" @7,8\nn20 obj \"far16\" @7,9\nn4 char \"Dragon\" ~dragon @9,9\ne n1>n2 contains, n1>n3 contains\n\n> line up the characters in a row",
+                    "promptTokens": 787,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 251,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 9
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#b621",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"move_node\",\"args\":{\"node\":\"n1\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 37,
+                    "prefillMillis": 6122,
+                    "decodeMillis": 6737,
+                    "cachedPrefixTokens": 563,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "move_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "move_node",
+                    "args": "{\"node\":\"n1\",\"to\":{\"auto\":true}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [
+                "moved \"Village\" from r0c0 to r4c6"
+            ],
+            "timings": {
+                "totalMillis": 12878,
+                "assembleMillis": 9,
+                "grammarMillis": 0,
+                "inferenceMillis": 12868,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "arrange-02-1",
+            "startedAtMillis": 1786542442733,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "put the important ones on the left",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn4 place \"Idea A\" @0,5\nn5 place \"Idea B\" @0,6\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> put the important ones on the left",
+                    "promptTokens": 614,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 78,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 9
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#c35e",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"update_node\",\"args\":{\"node\":\"n1\",\"label\":\"Village\",\"kind\":\"place\",\"set\":{}}}]}",
+                    "outputTokens": 45,
+                    "prefillMillis": 2010,
+                    "decodeMillis": 8990,
+                    "cachedPrefixTokens": 548,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "update_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "update_node",
+                    "args": "{\"node\":\"n1\",\"label\":\"Village\",\"kind\":\"place\",\"set\":{}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [
+                "updated \"Village\": kind is now \"place\""
+            ],
+            "timings": {
+                "totalMillis": 11017,
+                "assembleMillis": 6,
+                "grammarMillis": 0,
+                "inferenceMillis": 11010,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "setting-01-1",
+            "startedAtMillis": 1786542453750,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "make yourself more creative",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> make yourself more creative",
+                    "promptTokens": 587,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 6
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"move_node\",\"args\":{\"node\":\"n1\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 41,
+                    "prefillMillis": 1368,
+                    "decodeMillis": 7540,
+                    "cachedPrefixTokens": 548,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "move_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "move_node",
+                    "args": "{\"node\":\"n1\",\"to\":{\"auto\":true}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [],
+            "timings": {
+                "totalMillis": 8931,
+                "assembleMillis": 12,
+                "grammarMillis": 1,
+                "inferenceMillis": 8918,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "setting-02-1",
+            "startedAtMillis": 1786542462681,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "stop asking me before deleting things",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> stop asking me before deleting things",
+                    "promptTokens": 589,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 8
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"update_node\",\"args\":{\"node\":\"n1\",\"label\":\"Village\",\"kind\":\"place\",\"color\":\"ORANGE\",\"size\":\"LARGE\"}}]}",
+                    "outputTokens": 54,
+                    "prefillMillis": 313,
+                    "decodeMillis": 10604,
+                    "cachedPrefixTokens": 578,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "update_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "update_node",
+                    "args": "{\"node\":\"n1\",\"label\":\"Village\",\"kind\":\"place\",\"color\":\"ORANGE\",\"size\":\"LARGE\"}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 1
+                }
+            ],
+            "diff": [
+                "updated \"Village\": kind is now \"place\"; restyled"
+            ],
+            "timings": {
+                "totalMillis": 10932,
+                "assembleMillis": 6,
+                "grammarMillis": 1,
+                "inferenceMillis": 10924,
+                "executeMillis": 1
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "fail-01-1",
+            "startedAtMillis": 1786542473613,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "put a castle exactly where the village is",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> put a castle exactly where the village is",
+                    "promptTokens": 591,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 10
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"move_node\",\"args\":{\"node\":\"n1\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 43,
+                    "prefillMillis": 383,
+                    "decodeMillis": 8020,
+                    "cachedPrefixTokens": 578,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "move_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "move_node",
+                    "args": "{\"node\":\"n1\",\"to\":{\"auto\":true}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [],
+            "timings": {
+                "totalMillis": 8416,
+                "assembleMillis": 5,
+                "grammarMillis": 1,
+                "inferenceMillis": 8409,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "fail-02-1",
+            "startedAtMillis": 1786542482029,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "put the village inside the tavern",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> put the village inside the tavern",
+                    "promptTokens": 589,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 8
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"update_node\",\"args\":{\"node\":\"n1\",\"label\":\"Village\",\"kind\":\"place\",\"color\":\"ORANGE\",\"size\":\"SMALL\"}},{\"tool\":\"update_node\",\"args\":{\"node\":\"n2\",\"label\":\"Tavern\",\"kind\":\"place\",\"color\":\"ORANGE\",\"size\":\"SMALL\"}},{\"tool\":\"update_node\",\"args\":{\"node\":\"n3\",\"label\":\"Borin\",\"kind\":\"char\",\"color\":\"ORANGE\",\"size\":\"SMALL\"}}]}",
+                    "outputTokens": 166,
+                    "prefillMillis": 323,
+                    "decodeMillis": 35146,
+                    "cachedPrefixTokens": 579,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "update_node",
+                "update_node",
+                "update_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "update_node",
+                    "args": "{\"node\":\"n1\",\"label\":\"Village\",\"kind\":\"place\",\"color\":\"ORANGE\",\"size\":\"SMALL\"}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 1
+                },
+                {
+                    "index": 2,
+                    "tool": "update_node",
+                    "args": "{\"node\":\"n2\",\"label\":\"Tavern\",\"kind\":\"place\",\"color\":\"ORANGE\",\"size\":\"SMALL\"}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                },
+                {
+                    "index": 3,
+                    "tool": "update_node",
+                    "args": "{\"node\":\"n3\",\"label\":\"Borin\",\"kind\":\"char\",\"color\":\"ORANGE\",\"size\":\"SMALL\"}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [
+                "updated \"Village\": kind is now \"place\"; restyled",
+                "updated \"Tavern\": kind is now \"place\"; restyled",
+                "updated \"Borin\": kind is now \"char\"; restyled"
+            ],
+            "timings": {
+                "totalMillis": 35483,
+                "assembleMillis": 6,
+                "grammarMillis": 0,
+                "inferenceMillis": 35476,
+                "executeMillis": 1
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "fail-03-1",
+            "startedAtMillis": 1786542517512,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "delete n99",
+            "outcome": "AWAITING_CONFIRMATION",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> delete n99",
+                    "promptTokens": 587,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 6
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"delete_node\",\"args\":{\"node\":\"n1\"}},{\"tool\":\"delete_node\",\"args\":{\"node\":\"n2\"}},{\"tool\":\"delete_node\",\"args\":{\"node\":\"n3\"}}]}",
+                    "outputTokens": 80,
+                    "prefillMillis": 264,
+                    "decodeMillis": 16083,
+                    "cachedPrefixTokens": 578,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "delete_node",
+                "delete_node",
+                "delete_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "confirmation": {
+                "required": true,
+                "granted": false,
+                "affectedNodes": [
+                    "n1",
+                    "n2",
+                    "n3"
+                ]
+            },
+            "steps": [],
+            "diff": [],
+            "timings": {
+                "totalMillis": 16362,
+                "assembleMillis": 6,
+                "grammarMillis": 0,
+                "inferenceMillis": 16355,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "fail-04-1",
+            "startedAtMillis": 1786542533874,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "make a lot of things",
+            "outcome": "REJECTED",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "3",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nboard: empty\n\n> make a lot of things",
+                    "promptTokens": 538,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 4,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 7
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#30a6",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"move_node\",\"args\":{\"node\":\"$1\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 42,
+                    "prefillMillis": 437,
+                    "decodeMillis": 7336,
+                    "cachedPrefixTokens": 523,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [],
+            "validation": {
+                "passed": false,
+                "error": "step 1 argument 'node' refers to $1, which has not run yet"
+            },
+            "steps": [],
+            "diff": [],
+            "timings": {
+                "totalMillis": 7791,
+                "assembleMillis": 7,
+                "grammarMillis": 0,
+                "inferenceMillis": 7783,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "find-01-1",
+            "startedAtMillis": 1786542541665,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "make the dragon angry",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\nn5 obj \"far1\" @5,6\nn6 obj \"far2\" @5,7\nn7 obj \"far3\" @5,8\nn8 obj \"far4\" @5,9\nn10 obj \"far6\" @6,5\nn11 obj \"far7\" @6,6\nn12 obj \"far8\" @6,7\nn13 obj \"far9\" @6,8\nn14 obj \"far10\" @6,9\nn16 obj \"far12\" @7,5\nn17 obj \"far13\" @7,6\nn18 obj \"far14\" @7,7\nn19 obj \"far15\" @7,8\nn20 obj \"far16\" @7,9\nn4 char \"Dragon\" ~dragon @9,9\ne n1>n2 contains, n1>n3 contains\n\n> make the dragon angry",
+                    "promptTokens": 784,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 251,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 6
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#b621",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"respond\",\"args\":{\"text\":\"I am angry!\"}}]}",
+                    "outputTokens": 31,
+                    "prefillMillis": 6566,
+                    "decodeMillis": 6362,
+                    "cachedPrefixTokens": 523,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "respond"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "respond",
+                    "args": "{\"text\":\"I am angry!\"}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [],
+            "timings": {
+                "totalMillis": 12945,
+                "assembleMillis": 6,
+                "grammarMillis": 0,
+                "inferenceMillis": 12939,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "find-02-1",
+            "startedAtMillis": 1786542554611,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "find things twice",
+            "outcome": "REJECTED",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\nn5 obj \"far1\" @5,6\nn6 obj \"far2\" @5,7\nn7 obj \"far3\" @5,8\nn8 obj \"far4\" @5,9\nn10 obj \"far6\" @6,5\nn11 obj \"far7\" @6,6\nn12 obj \"far8\" @6,7\nn13 obj \"far9\" @6,8\nn14 obj \"far10\" @6,9\nn16 obj \"far12\" @7,5\nn17 obj \"far13\" @7,6\nn18 obj \"far14\" @7,7\nn19 obj \"far15\" @7,8\nn20 obj \"far16\" @7,9\nn4 char \"Dragon\" ~dragon @9,9\ne n1>n2 contains, n1>n3 contains\n\n> find things twice",
+                    "promptTokens": 783,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 251,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 5
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#b621",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"find\",\"args\":{\"text\":\"Dragon\",\"type\":\"CHARACTER\",\"kind\":\"CHARACTER\"}}]}",
+                    "outputTokens": 37,
+                    "prefillMillis": 315,
+                    "decodeMillis": 8557,
+                    "cachedPrefixTokens": 775,
+                    "stopReason": "COMPLETE"
+                },
+                {
+                    "role": "RETRIEVAL_REPLAN",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\nn5 obj \"far1\" @5,6\nn6 obj \"far2\" @5,7\nn7 obj \"far3\" @5,8\nn8 obj \"far4\" @5,9\nn10 obj \"far6\" @6,5\nn11 obj \"far7\" @6,6\nn12 obj \"far8\" @6,7\nn13 obj \"far9\" @6,8\nn14 obj \"far10\" @6,9\nn16 obj \"far12\" @7,5\nn17 obj \"far13\" @7,6\nn18 obj \"far14\" @7,7\nn19 obj \"far15\" @7,8\nn20 obj \"far16\" @7,9\nn4 char \"Dragon\" ~dragon @9,9\ne n1>n2 contains, n1>n3 contains\n\nfound: nothing matched\n\n> find things twice",
+                    "promptTokens": 788,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 251,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 5,
+                        "user": 5
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#b621",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"find\",\"args\":{\"text\":\"Dragon\"}},{\"tool\":\"move_node\",\"args\":{\"node\":\"n1\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 59,
+                    "prefillMillis": 649,
+                    "decodeMillis": 12422,
+                    "cachedPrefixTokens": 774,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [],
+            "validation": {
+                "passed": false,
+                "error": "find may only be used once per turn"
+            },
+            "steps": [],
+            "diff": [],
+            "timings": {
+                "totalMillis": 21987,
+                "assembleMillis": 21,
+                "grammarMillis": 1,
+                "inferenceMillis": 21965,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "ambig-01-1",
+            "startedAtMillis": 1786542576598,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "make it better",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> make it better",
+                    "promptTokens": 586,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 5
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"update_node\",\"args\":{\"node\":\"n1\",\"label\":\"Village\",\"kind\":\"place\",\"set\":{\"color\":\"black\",\"size\":\"medium\"}}}]}",
+                    "outputTokens": 53,
+                    "prefillMillis": 646,
+                    "decodeMillis": 13005,
+                    "cachedPrefixTokens": 562,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "update_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "update_node",
+                    "args": "{\"node\":\"n1\",\"label\":\"Village\",\"kind\":\"place\",\"set\":{\"color\":\"black\",\"size\":\"medium\"}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [
+                "updated \"Village\": kind is now \"place\"; color=black, size=medium"
+            ],
+            "timings": {
+                "totalMillis": 13666,
+                "assembleMillis": 6,
+                "grammarMillis": 0,
+                "inferenceMillis": 13659,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "ambig-02-1",
+            "startedAtMillis": 1786542590264,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "what is the capital of France",
+            "outcome": "REJECTED",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nboard: empty\n\n> what is the capital of France",
+                    "promptTokens": 539,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 4,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 8
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#e2cd",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"find\",\"args\":{\"text\":\"France\"}},{\"tool\":\"move_node\",\"args\":{\"node\":\"$1\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 55,
+                    "prefillMillis": 732,
+                    "decodeMillis": 11490,
+                    "cachedPrefixTokens": 523,
+                    "stopReason": "COMPLETE"
+                },
+                {
+                    "role": "RETRIEVAL_REPLAN",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nboard: empty\n\nfound: nothing matched\n\n> what is the capital of France",
+                    "promptTokens": 544,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 4,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 5,
+                        "user": 8
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#e2cd",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"find\",\"args\":{\"text\":\"France\"}},{\"tool\":\"move_node\",\"args\":{\"node\":\"$1\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 62,
+                    "prefillMillis": 479,
+                    "decodeMillis": 12289,
+                    "cachedPrefixTokens": 527,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [],
+            "validation": {
+                "passed": false,
+                "error": "find may only be used once per turn"
+            },
+            "steps": [],
+            "diff": [],
+            "timings": {
+                "totalMillis": 25021,
+                "assembleMillis": 10,
+                "grammarMillis": 2,
+                "inferenceMillis": 25007,
+                "executeMillis": 0
+            }
+        },
+        {
+            "schemaVersion": 1,
+            "turnId": "move-01-1",
+            "startedAtMillis": 1786542615285,
+            "strategyId": "plan_then_execute",
+            "modelId": "gemma-3-1b-it-qat-q4_0",
+            "userMessage": "move the castle north of the village",
+            "outcome": "OK",
+            "settingsSnapshot": {
+                "model.id": "",
+                "model.temperature": "0.3",
+                "model.top_p": "0.9",
+                "model.max_tokens": "384",
+                "model.context_tokens": "4096",
+                "model.threads": "0",
+                "agent.loop_strategy": "plan_then_execute",
+                "agent.max_steps": "8",
+                "agent.auto_repair": "false",
+                "agent.confirm_threshold": "3",
+                "agent.digest_max_nodes": "25",
+                "agent.history_turns": "2",
+                "ui.theme": "system",
+                "ui.grid_visible": "true",
+                "ui.cell_size": "medium",
+                "trace.enabled": "true",
+                "trace.retain_turns": "200"
+            },
+            "rounds": [
+                {
+                    "role": "INITIAL",
+                    "prompt": "You edit a grid board by emitting a plan of tool calls as JSON.\nReply with the plan only.\nUse ids exactly as they appear in the board listing below.\nRefer to a node created earlier in the same plan as $1, $2, and so on,\nnumbered by its step position.\nOmit any optional argument you do not want to change.\nPositions are relative: say north_of or next_to and the board decides\nthe cell. Only use respond to ask a question or explain a refusal.\n\ncreate_node: add a new thing to the board\n  type - what kind of thing it is\n  label - its name\n  kind? - a free-text sub-type such as blacksmith\n  at? - where to put it; defaults to automatic\n  attributes? - extra facts about it\n  color? - its colour\n  size? - its size\nupdate_node: change something that already exists\n  node - which thing to change\n  label? - a new name\n  kind? - a new sub-type\n  set? - facts to add or overwrite\n  unset? - fact names to remove\n  color? - a new colour\n  size? - a new size\nmove_node: move something to a new position\n  node - which thing to move\n  to - where to move it\ndelete_node: remove something and everything inside it\n  node - which thing to remove\nconnect: create a relationship between two things\n  from - the subject\n  to - the object\n  relation - how they are related\n  label? - wording for a CUSTOM relation\ndisconnect: remove a relationship between two things\n  from - the subject\n  to - the object\n  relation? - which relation; omit to remove all\nfind: look up things that are not currently listed; only as the first step\n  text? - words appearing in the name or sub-type\n  type? - restrict to one kind of thing\n  kind? - restrict to one sub-type\n  attribute? - a fact name, or name=value\narrange: lay several things out in a pattern\n  nodes - which things to lay out\n  layout - the pattern to use\nset_setting: change one of your own settings\n  key - which setting\n  value - the new value\nrespond: say something to the user; only needed for questions or refusals\n  text - what to say\n\nn1 place \"Village\" @0,0\nn2 place \"Tavern\" @0,1\nn3 char \"Borin\" ~blacksmith @1,0\ne n1>n2 contains, n1>n3 contains\n\n> move the castle north of the village",
+                    "promptTokens": 590,
+                    "blockTokens": {
+                        "system": 111,
+                        "tools": 408,
+                        "board": 54,
+                        "refs": 0,
+                        "history": 0,
+                        "extra": 0,
+                        "user": 9
+                    },
+                    "shedBlocks": [],
+                    "grammarHash": "#10ff",
+                    "rawOutput": "{\"steps\":[{\"tool\":\"move_node\",\"args\":{\"node\":\"n1\",\"to\":{\"auto\":true}}}]}",
+                    "outputTokens": 37,
+                    "prefillMillis": 2142,
+                    "decodeMillis": 6950,
+                    "cachedPrefixTokens": 523,
+                    "stopReason": "COMPLETE"
+                }
+            ],
+            "plan": [
+                "move_node"
+            ],
+            "validation": {
+                "passed": true,
+                "error": null
+            },
+            "steps": [
+                {
+                    "index": 1,
+                    "tool": "move_node",
+                    "args": "{\"node\":\"n1\",\"to\":{\"auto\":true}}",
+                    "resolvedRefs": {},
+                    "result": "OK",
+                    "error": null,
+                    "durationMillis": 0
+                }
+            ],
+            "diff": [],
+            "timings": {
+                "totalMillis": 9115,
+                "assembleMillis": 12,
+                "grammarMillis": 1,
+                "inferenceMillis": 9102,
+                "executeMillis": 0
+            }
+        }
+    ]
+}

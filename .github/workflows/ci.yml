@@ -140,6 +140,49 @@ jobs:
           echo "NDK_VERSION=$NDK_VERSION" >> "$GITHUB_ENV"
           echo "using NDK $NDK_VERSION"
 
+      # A signing key that survives between builds, created once and reused.
+      #
+      # Without this, AGP generates a fresh debug keystore on each runner, so
+      # every APK is signed with a different key. Android then refuses to
+      # install a build over its predecessor, and the only way in is to
+      # uninstall -- which deletes filesDir and the downloaded model with it.
+      # The symptom is having to re-download several hundred megabytes after
+      # every update, which is exactly what happened.
+      #
+      # It lives on an orphan branch rather than in the tree so it is not part
+      # of the source history. It is a development key with a published
+      # password; it exists to keep the signature stable, not to protect
+      # anything.
+      - name: Fetch or create the development signing key
+        run: |
+          set -e
+          REMOTE="https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          KEYDIR="$RUNNER_TEMP/signing"
+          mkdir -p "$KEYDIR"
+          if git ls-remote --exit-code --heads "$REMOTE" signing >/dev/null 2>&1; then
+            git clone -q --depth 1 --branch signing "$REMOTE" "$RUNNER_TEMP/signing-repo"
+            cp "$RUNNER_TEMP/signing-repo/droiddoodle-dev.jks" "$KEYDIR/"
+            echo "reusing the existing signing key"
+          else
+            keytool -genkeypair -v \
+              -keystore "$KEYDIR/droiddoodle-dev.jks" \
+              -alias droiddoodle -keyalg RSA -keysize 2048 -validity 10000 \
+              -storepass droiddoodle -keypass droiddoodle \
+              -dname "CN=DroidDoodle Development, OU=CI, O=DroidDoodle, C=GB"
+            (
+              cd "$KEYDIR"
+              git init -q -b signing
+              git add -A
+              git -c user.name=ci -c user.email=ci@local \
+                commit -qm "development signing key, created once and reused"
+              git push -q "$REMOTE" signing
+            )
+            echo "created a new signing key -- builds from here on can update in place"
+          fi
+          keytool -list -keystore "$KEYDIR/droiddoodle-dev.jks" -storepass droiddoodle \
+            | grep -i "SHA1\|Certificate fingerprint" || true
+          echo "DD_KEYSTORE=$KEYDIR/droiddoodle-dev.jks" >> "$GITHUB_ENV"
+
       # The native build is the expensive part and its inputs change rarely --
       # the llama.cpp revision is pinned, so a hit is the normal case.
       - name: Cache native build
@@ -169,6 +212,7 @@ jobs:
           # phone. It does not gate the build; the report is published to read.
           gradle --no-daemon --stacktrace --continue \
             "-Pdd.ndkVersion=$NDK_VERSION" \
+            "-Pdd.keystore=$DD_KEYSTORE" \
             :app:assembleDebug :app:assembleRelease :app:lintDebug 2>&1 \
             | tee "$RUNNER_TEMP/android.log"
 

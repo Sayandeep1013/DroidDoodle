@@ -26,6 +26,11 @@ internal data class PickerState(
     val rows: List<CandidateRow> = emptyList(),
     val availableMemoryBytes: Long = 0,
     val freeDiskBytes: Long = 0,
+    /** Everything the app is holding in models, complete and partial. */
+    val modelBytesOnDisk: Long = 0,
+    /** Abandoned part files and files no manifest entry claims. */
+    val strandedBytes: Long = 0,
+    val justFreedBytes: Long? = null,
     /** Non-null while a download is in flight. */
     val downloading: DownloadProgress? = null,
     val error: String? = null,
@@ -93,6 +98,9 @@ internal class ModelPickerViewModel(application: Application) : AndroidViewModel
                 },
                 availableMemoryBytes = availableMemory,
                 freeDiskBytes = store.usableSpaceBytes(),
+                modelBytesOnDisk = store.modelBytesOnDisk(),
+                strandedBytes = store.strandedFiles(candidates.map { it.id }.toSet())
+                    .sumOf { it.length() },
             )
         }
     }
@@ -158,6 +166,19 @@ internal class ModelPickerViewModel(application: Application) : AndroidViewModel
     }
 
     fun modelPath(candidate: ModelCandidate): String = store.fileFor(candidate.id).absolutePath
+
+    /**
+     * Deletes abandoned part files and anything the manifest no longer claims.
+     *
+     * Installed models are never touched: those are deleted per-model, on
+     * purpose, and silently removing one because a cleanup button was pressed
+     * would mean a surprise 687MB download later.
+     */
+    fun cleanUp() {
+        val freed = store.deleteAll(store.strandedFiles(candidates.map { it.id }.toSet()))
+        refresh()
+        _state.update { it.copy(justFreedBytes = freed) }
+    }
 
     /** Sends the user back to the picker after a load failure, with the reason. */
     fun reportLoadFailure(message: String) {

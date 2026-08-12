@@ -52,11 +52,21 @@ public fun Board.link(from: String, to: String, type: EdgeType): Board = when (
     is Res.Err -> error("fixture could not link $from->$to: ${r.error.message}")
 }
 
+/**
+ * Label lookups are case-insensitive, matching `nodeExists`.
+ *
+ * They were not, and the first device runs punished the model for it: Gemma
+ * created a node labelled "village" and the edge and position assertions
+ * reported it missing while the failure message printed `have: [village]`
+ * right beside "no node labelled 'Village'". Label casing is cosmetic free
+ * text; the suite measures whether the right structure was built.
+ */
 public fun Board.idOf(label: String): NodeId =
-    nodes.values.firstOrNull { it.label == label }?.id ?: error("no node labelled '$label'")
+    nodes.values.firstOrNull { it.label.equals(label, ignoreCase = true) }?.id
+        ?: error("no node labelled '$label'")
 
 public fun Board.idOrNull(label: String): NodeId? =
-    nodes.values.firstOrNull { it.label == label }?.id
+    nodes.values.firstOrNull { it.label.equals(label, ignoreCase = true) }?.id
 
 public val EMPTY: Board get() = Board.EMPTY
 
@@ -158,7 +168,7 @@ public fun cellEquals(label: String, row: Int, col: Int): Assertion = { o ->
  * has to read as one.
  */
 private fun Board.cellOfOrNull(label: String) =
-    nodes.values.firstOrNull { it.label == label }?.cell
+    nodes.values.firstOrNull { it.label.equals(label, ignoreCase = true) }?.cell
 
 public fun northOf(a: String, b: String): Assertion = { o ->
     val ca = o.board.cellOfOrNull(a)

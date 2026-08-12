@@ -70,9 +70,35 @@ internal fun ModelPickerScreen(
         )
         Text(
             "${formatBytes(state.availableMemoryBytes)} memory free · " +
-                "${formatBytes(state.freeDiskBytes)} storage free",
+                "${formatBytes(state.freeDiskBytes)} storage free · " +
+                "${formatBytes(state.modelBytesOnDisk)} used by models",
             style = MaterialTheme.typography.labelMedium,
         )
+
+        // Abandoned downloads used to be invisible and unreachable: a part file
+        // survives a cancellation so the next attempt can resume, but nothing
+        // ever removed one the user had given up on.
+        if (state.strandedBytes > 0) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    "${formatBytes(state.strandedBytes)} in unfinished downloads",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = statusWarning(),
+                    modifier = Modifier.weight(1f),
+                )
+                TextButton(onClick = vm::cleanUp) { Text("Clean up") }
+            }
+        }
+        state.justFreedBytes?.let { freed ->
+            Text(
+                if (freed > 0) "Freed ${formatBytes(freed)}." else "Nothing to clean up.",
+                style = MaterialTheme.typography.labelMedium,
+                color = statusSuccess(),
+            )
+        }
 
         state.loadFailed?.let { message ->
             Warning("The model would not load: $message")

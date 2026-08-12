@@ -62,6 +62,41 @@ internal class ModelStore(context: Context) {
         partFor(id).delete()
     }
 
+    /** Total bytes the app is holding in models, complete and partial alike. */
+    fun modelBytesOnDisk(): Long =
+        root.listFiles().orEmpty().filter { it.isFile }.sumOf { it.length() }
+
+    /**
+     * Part files with no matching manifest entry, and part files for a model
+     * that is already installed.
+     *
+     * A `.part` is kept after a cancelled download so the next attempt resumes,
+     * which is right -- but nothing ever removed one the user had abandoned, so
+     * a browsed-then-cancelled model left hundreds of megabytes behind with no
+     * way to see it, let alone delete it.
+     */
+    fun strandedFiles(knownIds: Set<String>): List<File> =
+        root.listFiles().orEmpty().filter { file ->
+            if (!file.isFile) return@filter false
+            when {
+                file.name.endsWith(".gguf.part") -> {
+                    val id = file.name.removeSuffix(".gguf.part")
+                    id !in knownIds || isInstalled(id)
+                }
+                file.name.endsWith(".gguf") -> file.name.removeSuffix(".gguf") !in knownIds
+                else -> true
+            }
+        }
+
+    fun deleteAll(files: List<File>): Long {
+        var freed = 0L
+        for (file in files) {
+            val size = file.length()
+            if (file.delete()) freed += size
+        }
+        return freed
+    }
+
     /**
      * Downloads [candidate], resuming an interrupted attempt when possible.
      *

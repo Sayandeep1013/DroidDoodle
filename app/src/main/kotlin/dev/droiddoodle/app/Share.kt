@@ -15,6 +15,17 @@ import java.io.File
  */
 internal fun shareText(context: Context, content: String, fileName: String) {
     val dir = File(context.cacheDir, "export").apply { mkdirs() }
+
+    // Every export used to leave a file behind for good. A suite trace is
+    // ~170KB and a session's traces can be larger, so repeated exports quietly
+    // accumulated in the cache with nothing ever clearing them. Keep only the
+    // most recent few; the receiving app has already copied what it needs.
+    dir.listFiles().orEmpty()
+        .filter { it.isFile }
+        .sortedByDescending { it.lastModified() }
+        .drop(KEEP_EXPORTS - 1)
+        .forEach { it.delete() }
+
     val file = File(dir, fileName)
     file.writeText(content)
 
@@ -30,3 +41,6 @@ internal fun shareText(context: Context, content: String, fileName: String) {
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
     )
 }
+
+/** Enough to re-share a recent export, few enough to stay negligible. */
+private const val KEEP_EXPORTS = 3

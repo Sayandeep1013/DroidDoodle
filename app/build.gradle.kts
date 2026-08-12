@@ -5,6 +5,14 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+// A stable signing key, supplied by CI. Without one, AGP generates a fresh
+// debug keystore on every machine -- and on a fresh CI runner that means every
+// build is signed with a different key. Android then refuses to install the new
+// APK over the old one, so the only way in is to uninstall, which deletes
+// filesDir and with it the several-hundred-megabyte model. That is why the
+// model was being downloaded again after every update.
+val devKeystore = (findProperty("dd.keystore") as String?)?.takeIf { it.isNotBlank() }?.let(::file)
+
 android {
     namespace = "dev.droiddoodle.app"
     compileSdk = 35
@@ -27,13 +35,32 @@ android {
         ndk { abiFilters += "arm64-v8a" }
     }
 
+    signingConfigs {
+        if (devKeystore != null) {
+            create("dev") {
+                storeFile = devKeystore
+                // A development key with a published password. It exists to
+                // keep the signature stable across builds, not to protect
+                // anything; treating it as a secret would only stop it doing
+                // its job.
+                storePassword = "droiddoodle"
+                keyAlias = "droiddoodle"
+                keyPassword = "droiddoodle"
+            }
+        }
+    }
+
     buildTypes {
+        // Both types use the same key, so a debug build and a release build can
+        // replace one another without losing the downloaded model.
+        val signing = signingConfigs.findByName("dev") ?: signingConfigs.getByName("debug")
         debug {
             isMinifyEnabled = false
+            signingConfig = signing
         }
         release {
             isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signing
         }
     }
 
