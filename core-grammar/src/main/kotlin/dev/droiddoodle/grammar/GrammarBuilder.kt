@@ -103,8 +103,21 @@ public object GrammarBuilder {
             }
         }
 
+        // The body is parenthesised unconditionally, and this is load-bearing.
+        //
+        // In GBNF `|` binds looser than concatenation, so an unbracketed
+        // alternation splits the *whole* rule rather than just the body:
+        //
+        //   tool-find ::= "{...{" ( A ) | ( B ) | ( C ) "}}"
+        //
+        // means ( "{...{" A ) | ( B ) | ( C "}}" ). The middle alternatives are
+        // bare argument fragments with no braces, so the sampler will happily
+        // emit `"type":"OBJECT"` straight into the steps array. That is not a
+        // hypothetical: it produced every grammar violation in the first
+        // on-device run, and because the grammar still *parsed*, generation
+        // silently degraded instead of failing.
         return lit("{\"tool\":\"${tool.name}\",\"args\":{") +
-            (if (body.isEmpty()) "" else " $body ") +
+            (if (body.isEmpty()) "" else " ( $body ) ") +
             lit("}}")
     }
 

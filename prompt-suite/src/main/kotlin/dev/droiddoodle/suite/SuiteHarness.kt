@@ -149,26 +149,59 @@ public fun cellEquals(label: String, row: Int, col: Int): Assertion = { o ->
  * guarantee in docs/20-world-model.md §7. Cases needing exact adjacency use
  * [cellEquals] and declare a board where the target cell is free.
  */
+/**
+ * Looks up a node for a positional assertion, or explains its absence.
+ *
+ * `first { }` throws when the model simply did not create the node, which took
+ * the whole case out of the run rather than failing it -- `multi-03` was lost
+ * that way in the first device run. A missing node is an ordinary failure and
+ * has to read as one.
+ */
+private fun Board.cellOfOrNull(label: String) =
+    nodes.values.firstOrNull { it.label == label }?.cell
+
 public fun northOf(a: String, b: String): Assertion = { o ->
-    val ca = o.board.nodes.values.first { it.label == a }.cell
-    val cb = o.board.nodes.values.first { it.label == b }.cell
-    if (ca.row < cb.row) null else "'$a' at $ca is not north of '$b' at $cb"
+    val ca = o.board.cellOfOrNull(a)
+    val cb = o.board.cellOfOrNull(b)
+    when {
+        ca == null -> "no node labelled '$a' (have: ${o.board.nodes.values.map { it.label }})"
+        cb == null -> "no node labelled '$b' (have: ${o.board.nodes.values.map { it.label }})"
+        ca.row < cb.row -> null
+        else -> "'$a' at $ca is not north of '$b' at $cb"
+    }
 }
 
 public fun westOf(a: String, b: String): Assertion = { o ->
-    val ca = o.board.nodes.values.first { it.label == a }.cell
-    val cb = o.board.nodes.values.first { it.label == b }.cell
-    if (ca.col < cb.col) null else "'$a' at $ca is not west of '$b' at $cb"
+    val ca = o.board.cellOfOrNull(a)
+    val cb = o.board.cellOfOrNull(b)
+    when {
+        ca == null -> "no node labelled '$a' (have: ${o.board.nodes.values.map { it.label }})"
+        cb == null -> "no node labelled '$b' (have: ${o.board.nodes.values.map { it.label }})"
+        ca.col < cb.col -> null
+        else -> "'$a' at $ca is not west of '$b' at $cb"
+    }
 }
 
 public fun sameRow(vararg labels: String): Assertion = { o ->
-    val rows = labels.map { l -> o.board.nodes.values.first { it.label == l }.cell.row }.toSet()
-    if (rows.size == 1) null else "expected one row, found $rows"
+    val missing = labels.filter { o.board.cellOfOrNull(it) == null }
+    val rows = labels.mapNotNull { o.board.cellOfOrNull(it)?.row }.toSet()
+    when {
+        missing.isNotEmpty() -> "missing ${missing.joinToString(", ")}"
+        rows.size == 1 -> null
+        else -> "expected one row, found $rows"
+    }
 }
 
 public fun edgeExists(from: String, to: String, type: EdgeType): Assertion = { o ->
-    val found = o.board.edgesBetween(o.board.idOf(from), o.board.idOf(to), type)
-    if (found.isNotEmpty()) null else "no $type edge from '$from' to '$to'"
+    // idOf throws on a missing node, for the same reason as above.
+    val a = o.board.idOrNull(from)
+    val b = o.board.idOrNull(to)
+    when {
+        a == null -> "no node labelled '$from'"
+        b == null -> "no node labelled '$to'"
+        o.board.edgesBetween(a, b, type).isNotEmpty() -> null
+        else -> "no $type edge from '$from' to '$to'"
+    }
 }
 
 public fun outcomeIs(expected: Outcome): Assertion = { o ->

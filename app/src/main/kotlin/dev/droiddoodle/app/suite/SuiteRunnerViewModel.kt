@@ -35,7 +35,8 @@ internal data class CaseResult(
     val promptTokens: Int,
     val outputTokens: Int,
     val tokensPerSecond: Double,
-    val trace: TraceRecord,
+    /** Null when the case threw before a turn completed. */
+    val trace: TraceRecord?,
 )
 
 internal data class SuiteRunState(
@@ -108,18 +109,28 @@ internal class SuiteRunnerViewModel(private val engine: LlmEngine) : ViewModel()
                         trace = result.trace,
                     )
                 }.getOrElse { error ->
-                    // A thrown case is a failure, not a reason to abandon the
-                    // run: a partial suite with one crash is still a result.
-                    _state.update {
-                        it.copy(crashed = "${case.id}: ${error.message ?: error::class.java.simpleName}")
-                    }
-                    null
+                    // A thrown case is recorded as a failed case, not dropped.
+                    // Dropping it shrinks the denominator, which quietly
+                    // inflates the pass rate -- multi-03 vanished from the
+                    // first device run exactly this way, leaving "33 of 35"
+                    // and a percentage computed over the survivors.
+                    val reason = error.message ?: error::class.java.simpleName
+                    _state.update { it.copy(crashed = "${case.id}: $reason") }
+                    CaseResult(
+                        id = case.id,
+                        category = PromptSuite.categoryOf(case.id),
+                        passed = false,
+                        grammarViolation = false,
+                        failures = listOf("threw: $reason"),
+                        failureCode = "THREW",
+                        totalMillis = 0,
+                        promptTokens = 0,
+                        outputTokens = 0,
+                        tokensPerSecond = 0.0,
+                        trace = null,
+                    )
                 }
-                if (row != null) {
-                    _state.update { it.copy(results = it.results + row, done = it.done + 1) }
-                } else {
-                    _state.update { it.copy(done = it.done + 1) }
-                }
+                _state.update { it.copy(results = it.results + row, done = it.done + 1) }
             }
             _state.update { it.copy(running = false, currentId = null) }
         }
@@ -132,7 +143,7 @@ internal class SuiteRunnerViewModel(private val engine: LlmEngine) : ViewModel()
     }
 
     /** Every trace from the run, as one document, for `results/`. */
-    fun exportTraces(): String = TraceJson.encodeAll(_state.value.results.map { it.trace })
+    fun exportTraces(): String = TraceJson.encodeAll(_state.value.results.mapNotNull { it.trace })
 
     /** The summary table P10 commits alongside the traces. */
     fun exportSummary(modelId: String): String = buildString {
