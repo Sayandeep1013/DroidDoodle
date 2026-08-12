@@ -46,6 +46,10 @@ struct Session {
     llama_context *ctx = nullptr;
     const llama_vocab *vocab = nullptr;
     int32_t n_batch = 512;
+    // Exactly the tokens currently held in the KV cache: the previous prompt
+    // followed by whatever was generated from it. Compared against the next
+    // prompt to find the reusable prefix.
+    std::vector<llama_token> kv_tokens;
 };
 
 int64_t now_millis() {
@@ -161,6 +165,7 @@ JNIEXPORT void JNICALL
 Java_dev_droiddoodle_inference_llama_LlamaNative_freeModel(JNIEnv *, jobject, jlong handle) {
     auto *session = reinterpret_cast<Session *>(handle);
     if (session == nullptr) return;
+    session->kv_tokens.clear();
     if (session->ctx) llama_free(session->ctx);
     if (session->model) llama_model_free(session->model);
     delete session;
@@ -214,14 +219,50 @@ Java_dev_droiddoodle_inference_llama_LlamaNative_generate(
         return finish("", kError);
     }
 
-    // No KV prefix reuse yet: the cache is cleared every turn and re-prefilled.
-    // Correctness first; the optimisation lands once there is a measured
-    // baseline to compare it against, and cachedPrefixTokens stays 0 until then.
-    llama_memory_clear(llama_get_memory(session->ctx), true);
+    // KV prefix reuse.
+    //
+    // Context blocks 1 and 2 -- system rules and tool descriptions -- are
+    // static across turns and placed first precisely so this works
+    // (docs/22-context.md). The first on-device run measured prefill at 56% of
+    // turn latency, 14.1s of a 25s median for ~589 tokens, so re-prefilling an
+    // unchanged prefix was the single largest avoidable cost.
+    llama_memory_t mem = llama_get_memory(session->ctx);
+
+    size_t reuse = 0;
+    while (reuse < session->kv_tokens.size() &&
+           reuse < prompt_tokens.size() &&
+           session->kv_tokens[reuse] == prompt_tokens[reuse]) {
+        reuse++;
+    }
+    // Never reuse the entire prompt: sampling needs logits, and logits come
+    // only from a token actually decoded this turn. Reusing all of it would
+    // leave nothing to decode and sample from a stale distribution.
+    if (reuse == prompt_tokens.size() && reuse > 0) {
+        reuse--;
+    }
+
+    if (reuse == 0) {
+        llama_memory_clear(mem, true);
+    } else {
+        // Drop everything after the shared prefix, including the previous
+        // turn's generated tokens, which are never part of the new prompt.
+        llama_memory_seq_rm(mem, 0, (llama_pos) reuse, -1);
+    }
+    stats[kCachedPrefixTokens] = (jlong) reuse;
+
+    std::vector<llama_token> to_decode(prompt_tokens.begin() + (long) reuse,
+                                       prompt_tokens.end());
 
     const int64_t prefill_start = now_millis();
-    if (!decode_all(session, prompt_tokens)) return finish("", kError);
+    if (!decode_all(session, to_decode)) {
+        // A failed decode leaves the cache in a state we can no longer
+        // describe, so the next turn must not trust it.
+        session->kv_tokens.clear();
+        llama_memory_clear(mem, true);
+        return finish("", kError);
+    }
     stats[kPrefillMillis] = now_millis() - prefill_start;
+    session->kv_tokens.assign(prompt_tokens.begin(), prompt_tokens.end());
 
     llama_sampler *chain = llama_sampler_chain_init(llama_sampler_chain_default_params());
     if (chain == nullptr) return finish("", kError);
@@ -260,8 +301,12 @@ Java_dev_droiddoodle_inference_llama_LlamaNative_generate(
         llama_batch batch = llama_batch_get_one(&next, 1);
         if (llama_decode(session->ctx, batch) != 0) {
             reason = kError;
+            session->kv_tokens.clear();
             break;
         }
+        // The generated token is now in the cache too, and the next turn's
+        // prefix comparison has to know that.
+        session->kv_tokens.push_back(next);
     }
     if (produced >= maxTokens && reason == kComplete) reason = kMaxTokens;
 

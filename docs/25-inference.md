@@ -134,12 +134,39 @@ Field length limits from `20-world-model.md` §2 are **not** encoded in the
 grammar — character-counting rules would balloon it. They are validation
 concerns.
 
+### Operator precedence
+
+**GBNF binds `|` looser than concatenation.** Any rule body containing an
+alternation must be bracketed, or the alternation splits the entire rule rather
+than the part it was meant to cover. `GrammarBuilder` therefore parenthesises
+every tool body unconditionally.
+
+This is not a style rule. Getting it wrong produced
+
+    tool-find ::= "{...{" ( A ) | ( B ) | ( C ) "}}"
+
+which means `( "{...{" A ) | ( B ) | ( C "}}" )` — so a bare `"type":"OBJECT"`
+fragment, with no braces at all, was a complete legal match. It reached
+production and made the first on-device run's pass rate meaningless. See
+`results/README.md`.
+
 ### Snapshot testing
 
 `:core-grammar` has snapshot tests over generated grammars for a set of fixture
 boards. Adding or renaming a tool argument changes the snapshot, so grammar
 drift shows up as a reviewable diff. This is the mechanism behind intent
 criterion L5.
+
+Snapshots alone are not enough, and the precedence defect proved it: they assert
+the grammar is *stable*, not *correct*, and `PlanEnvelopeChecker` is
+schema-equivalent rather than a GBNF interpreter, so a grammar that admits **too
+much** falls exactly between the two. `GrammarAlternationTest` covers that gap by
+asserting the emitted shape — every tool rule must be a single top-level
+alternative opening with its own tool literal.
+
+The remaining honest gap: nothing on the JVM interprets GBNF, so "the sampler
+will accept only what we intend" is still checked structurally rather than
+executed. A device run is the only place that claim is tested.
 
 ## 4. KV cache reuse
 
@@ -155,15 +182,22 @@ The cache is invalidated when the model changes, the tool registry changes, or
 `model.context_tokens` changes. Prefix-reuse hit length is reported into
 `Timings` so the optimisation is measurable rather than assumed.
 
-> **Status: not implemented.** The JNI bridge clears the whole cache every turn
-> and re-prefills from scratch; `cachedPrefixTokens` is hard-wired to 0 and the
-> `Timings` field it feeds is therefore always zero, not merely low. This is
-> deliberate sequencing, not an oversight — an optimisation with no measured
-> baseline cannot be shown to have helped, and a subtly wrong prefix reuse
-> corrupts generation in ways that look like model weakness. It lands after P10
-> produces a latency baseline. **P8's acceptance criterion "prefix reuse is
-> non-zero on turn two" is consequently unmet and P8 cannot be signed off on
-> that line alone.**
+> **Status: implemented, unmeasured.** The bridge keeps the exact token
+> sequence held in the KV cache, finds the longest common prefix with the next
+> prompt, drops everything after it, and decodes only the divergent suffix.
+> `cachedPrefixTokens` reports the reuse length per round.
+>
+> It deliberately never reuses the *entire* prompt: sampling needs logits, and
+> logits come only from a token decoded this turn, so the last prompt token is
+> always re-decoded.
+>
+> The measurement that justified it, from the first on-device run: prefill was
+> **56% of turn latency** — 14.1s median for 589 tokens at 42 tok/s, against
+> 10.5s of decode. Assembly, grammar emission and execution together came to
+> 7ms, which is to say the Kotlin is free and the entire cost is the model.
+>
+> **Whether it helped is not yet known.** The next device run answers that, and
+> until it does this is an optimisation with a rationale rather than a result.
 
 ## 5. llama.cpp binding
 
