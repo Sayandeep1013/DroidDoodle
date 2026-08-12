@@ -9,6 +9,12 @@ android {
     namespace = "dev.droiddoodle.app"
     compileSdk = 35
 
+    // CI passes the NDK version the runner actually has rather than pinning one
+    // here: a pinned version that the runner lacks makes AGP fail before it ever
+    // reaches the C++ compiler, and the pin would be guesswork anyway since
+    // constraint C2 means no NDK exists locally to check against.
+    (findProperty("dd.ndkVersion") as String?)?.let { ndkVersion = it }
+
     defaultConfig {
         applicationId = "dev.droiddoodle"
         minSdk = 26
@@ -54,6 +60,7 @@ dependencies {
     implementation(project(":core-world"))
     implementation(project(":core-agent"))
     implementation(project(":inference"))
+    implementation(project(":inference-llama"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

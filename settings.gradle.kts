@@ -37,7 +37,7 @@ include(":core-agent")
 //
 // DD_SKIP_ANDROID=1 keeps that job pure Kotlin. Everything else -- local
 // development, the `android` CI job, Android Studio -- gets the full build.
-// :inference-llama joins in P8, when there is native code for it to hold.
 if (System.getenv("DD_SKIP_ANDROID") != "1") {
+    include(":inference-llama")
     include(":app")
 }

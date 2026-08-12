@@ -107,8 +107,15 @@ jobs:
   android:
     name: Debug APK
     runs-on: ubuntu-latest
+    # Cross-compiling ggml for arm64 from scratch dominates this job. The cache
+    # below makes repeat runs far cheaper, but a cold one is slow.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+        with:
+          # :inference-llama builds llama.cpp from the pinned submodule, so a
+          # bare checkout would fail at CMake configure with an empty directory.
+          submodules: recursive
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -121,12 +128,36 @@ jobs:
         with:
           gradle-version: '8.14'
 
+      - name: Install NDK and CMake
+        run: |
+          set -e
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKMANAGER" --licenses > /dev/null 2>&1 || true
+          "$SDKMANAGER" --install "cmake;3.22.1" > /dev/null
+          # Use whatever NDK the image ships rather than pinning a version the
+          # runner may not have; the exact patch level does not matter to us.
+          NDK_VERSION="$(basename "$ANDROID_NDK_LATEST_HOME")"
+          echo "NDK_VERSION=$NDK_VERSION" >> "$GITHUB_ENV"
+          echo "using NDK $NDK_VERSION"
+
+      # The native build is the expensive part and its inputs change rarely --
+      # the llama.cpp revision is pinned, so a hit is the normal case.
+      - name: Cache native build
+        uses: actions/cache@v4
+        with:
+          path: |
+            inference-llama/.cxx
+            inference-llama/build/intermediates/cxx
+          key: cxx-${{ runner.os }}-${{ hashFiles('.gitmodules', 'inference-llama/src/main/cpp/CMakeLists.txt', 'inference-llama/build.gradle.kts') }}
+
       - name: Assemble debug APK
         id: assemble
         continue-on-error: true
         run: |
           set -o pipefail
-          gradle --no-daemon --stacktrace :app:assembleDebug 2>&1 \
+          gradle --no-daemon --stacktrace \
+            "-Pdd.ndkVersion=$NDK_VERSION" \
+            :app:assembleDebug 2>&1 \
             | tee "$RUNNER_TEMP/android.log"
 
       - name: Publish Android diagnostics
@@ -135,7 +166,9 @@ jobs:
           set -e
           OUT="$RUNNER_TEMP/androidout"
           rm -rf "$OUT" && mkdir -p "$OUT"
-          grep -nE '^e: |^w: |error:|FAILED|FAILURE:|Caused by:|Execution failed' \
+          # CMake and ninja report in their own dialects, so the native build
+          # needs patterns the Kotlin-only jvm job does not.
+          grep -nE '^e: |^w: |error:|FAILED|FAILURE:|Caused by:|Execution failed|CMake Error|ninja: |undefined reference|No such file or directory' \
             "$RUNNER_TEMP/android.log" | head -500 \
             > "$OUT/android-diagnostics-${{ github.run_number }}.txt" || true
           sed -n '/^\* What went wrong:/,/^\* Get more help/p' "$RUNNER_TEMP/android.log" \

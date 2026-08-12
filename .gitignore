@@ -6,6 +6,8 @@ local.properties
 *.iml
 .DS_Store
 .kotlin/
+.cxx/
+*/.cxx/
 
 # Model weights are downloaded at runtime, never committed. See docs/25-inference.md §6.
 *.gguf
