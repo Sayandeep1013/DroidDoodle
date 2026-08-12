@@ -17,9 +17,15 @@ small local model, a well-defined world, structured state, and excellent tools?*
 
 ## Read this first
 
+**Resuming work?** [`docs/HANDOFF.md`](docs/HANDOFF.md) is current state: what
+is done, what is unverified, and what to do next. [`CLAUDE.md`](CLAUDE.md) holds
+the working rules, including how to build (CI is the compiler — there is no
+local toolchain) and how to triage a device run.
+
 | Document | Contents |
 |---|---|
-| [`docs/00-INTENT.md`](docs/00-INTENT.md) | Why, constraints, locked decisions, success criteria. **Start here.** |
+| [`docs/HANDOFF.md`](docs/HANDOFF.md) | **Current state and what is left. Start here when resuming.** |
+| [`docs/00-INTENT.md`](docs/00-INTENT.md) | Why, constraints, locked decisions, success criteria. The authority. |
 | [`docs/10-architecture.md`](docs/10-architecture.md) | Module boundaries and dependency rules |
 | [`docs/20-world-model.md`](docs/20-world-model.md) | Nodes, edges, grid, placement resolution |
 | [`docs/21-tools.md`](docs/21-tools.md) | The ten tools and their schemas |

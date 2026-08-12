@@ -28,7 +28,7 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = 1
-        versionName = "0.1.0-p7"
+        versionName = "0.1.0-p10"
 
         // arm64 only. See docs/25-inference.md §5 -- 32-bit ARM and x86 are not
         // supported targets, and shipping ABIs we cannot test is dishonest.
