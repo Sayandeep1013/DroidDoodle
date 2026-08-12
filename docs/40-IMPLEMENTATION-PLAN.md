@@ -272,7 +272,16 @@ P2, P3 and P4 are independent of each other once P1 lands.
 | P6 Prompt Suite | **verified — CI green** |
 | P7 `:app` canvas | **builds — CI green**; DEVICE criteria unverified |
 | P8 `:inference-llama` | **builds — CI green**; every DEVICE and MODEL criterion unverified, and one criterion deliberately unmet |
-| P9–P10 | not started |
+| P9 Trace, settings, suite runner | **builds — CI green**; DEVICE criteria unverified |
+| P10 | blocked on a device |
+
+An eighth module appeared during P9: **`:prompt-suite`**. The 33-odd cases had
+been living in `:core-agent`'s test source set, where the app could not reach
+them, and P10 needs to run the *same* cases against a real model. A second copy
+inside `:app` would have drifted — the failure mode the generated grammar exists
+to avoid — so the cases moved into a pure-Kotlin module that both the RUNTIME
+test and the device runner consume. `docs/10-architecture.md` §1 lists seven
+modules and should be read as eight.
 
 ### What P8 has and has not established
 
