@@ -135,18 +135,29 @@ public class LlamaEngine private constructor(
         public fun defaultThreads(): Int =
             minOf(4, (Runtime.getRuntime().availableProcessors() - 2)).coerceAtLeast(1)
 
+        /**
+         * @param onStage called before each real step of loading. The stages are
+         *   the actual ones, not a decorative progress animation -- mapping a
+         *   700MB file off flash is genuinely the slow part and the user
+         *   deserves to be told that is what is happening.
+         */
         public fun load(
             modelPath: String,
             modelId: String,
             contextTokens: Int,
             promptTemplate: PromptTemplate,
             threads: Int = defaultThreads(),
+            onStage: (String) -> Unit = {},
         ): LlamaEngine {
+            onStage("Starting the inference backend")
             LlamaNative.backendInit()
+
+            onStage("Mapping the model and allocating the context")
             val handle = LlamaNative.loadModel(modelPath, contextTokens, threads)
             if (handle == 0L) {
                 throw LlamaLoadException("llama.cpp could not load the model at $modelPath")
             }
+            onStage("Measuring the prompt template")
             // Measured with the real tokeniser rather than estimated, for the
             // same reason tokenCount is on the interface at all.
             val envelopeTokens = LlamaNative.tokenCount(handle, promptTemplate.envelope())

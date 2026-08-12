@@ -13,15 +13,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -34,6 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.droiddoodle.app.resources.ResourceScreen
 import dev.droiddoodle.app.settings.SettingsScreen
 import dev.droiddoodle.app.trace.TraceScreen
 import dev.droiddoodle.model.SettingKeys
@@ -42,84 +51,150 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent {
-            // The theme lives inside AppRoot, which reads it from settings.
-            AppRoot()
-        }
+        // The theme lives inside AppRoot, which reads it from settings.
+        setContent { AppRoot() }
     }
 }
 
-private enum class Screen { CANVAS, TRACE, SETTINGS }
+private enum class Screen { CANVAS, TRACE, SETTINGS, RESOURCES }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun AppScreen(vm: BoardViewModel) {
+internal fun AppScreen(vm: BoardViewModel, modelLabel: String) {
     val state by vm.state.collectAsStateWithLifecycle()
     val settings by vm.settings.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var input by remember { mutableStateOf("") }
     var screen by remember { mutableStateOf(Screen.CANVAS) }
+    var menuOpen by remember { mutableStateOf(false) }
 
-    // ui.cell_size sets the base zoom; the +/- buttons still adjust from there.
+    // ui.cell_size sets the base zoom; the +/- controls adjust from there, so a
+    // settings change is visible without discarding the user's current zoom.
     val baseScale = when (settings.string(SettingKeys.UI_CELL_SIZE)) {
         "small" -> 0.7f
         "large" -> 1.4f
         else -> 1.0f
     }
     var zoom by remember { mutableFloatStateOf(1f) }
-    val scale = baseScale * zoom
 
     when (screen) {
         Screen.TRACE -> {
-            TraceScreen(
-                traces = state.traces,
-                onExportAll = { shareText(context, vm.exportTraces(), "droiddoodle-trace.json") },
+            SubScreen(
+                title = "Trace · ${state.traces.size} turns",
                 onBack = { screen = Screen.CANVAS },
-            )
+                actions = {
+                    TextButton(
+                        onClick = {
+                            shareText(context, vm.exportTraces(), "droiddoodle-trace.json")
+                        },
+                        enabled = state.traces.isNotEmpty(),
+                    ) { Text("Export") }
+                },
+            ) { TraceScreen(state.traces) }
             return
         }
         Screen.SETTINGS -> {
-            SettingsScreen(
-                snapshot = settings,
-                onChange = vm::setSetting,
-                onResetAll = vm::resetSettings,
+            SubScreen(
+                title = "Settings",
                 onBack = { screen = Screen.CANVAS },
-            )
+                actions = { TextButton(onClick = vm::resetSettings) { Text("Reset") } },
+            ) { SettingsScreen(snapshot = settings, onChange = vm::setSetting) }
+            return
+        }
+        Screen.RESOURCES -> {
+            SubScreen(title = "Resources", onBack = { screen = Screen.CANVAS }) {
+                ResourceScreen()
+            }
             return
         }
         Screen.CANVAS -> Unit
     }
 
-    Column(Modifier.fillMaxSize()) {
-
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .statusBarsPadding()
-                .padding(horizontal = 12.dp, vertical = 6.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text("DroidDoodle", style = MaterialTheme.typography.titleMedium)
-            Text(
-                "${state.board.size} nodes",
-                style = MaterialTheme.typography.labelSmall,
-                modifier = Modifier.weight(1f),
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Column {
+                        Text("DroidDoodle", style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            "$modelLabel · ${state.board.size} nodes",
+                            style = MaterialTheme.typography.labelSmall,
+                        )
+                    }
+                },
+                actions = {
+                    TextButton(onClick = vm::undo, enabled = state.canUndo) { Text("Undo") }
+                    TextButton(onClick = vm::redo, enabled = state.canRedo) { Text("Redo") }
+                    IconButton(onClick = { menuOpen = true }) {
+                        Icon(Icons.Filled.MoreVert, contentDescription = "More")
+                    }
+                    DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                        DropdownMenuItem(
+                            text = { Text("Zoom in") },
+                            onClick = { zoom = (zoom + 0.2f).coerceAtMost(2.0f) },
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Zoom out") },
+                            onClick = { zoom = (zoom - 0.2f).coerceAtLeast(0.4f) },
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Trace") },
+                            onClick = { menuOpen = false; screen = Screen.TRACE },
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Resources") },
+                            onClick = { menuOpen = false; screen = Screen.RESOURCES },
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Settings") },
+                            onClick = { menuOpen = false; screen = Screen.SETTINGS },
+                        )
+                    }
+                },
             )
-            TextButton(onClick = { zoom = (zoom - 0.2f).coerceAtLeast(0.4f) }) { Text("−") }
-            TextButton(onClick = { zoom = (zoom + 0.2f).coerceAtMost(2.0f) }) { Text("+") }
-            TextButton(onClick = vm::undo, enabled = state.canUndo) { Text("Undo") }
-            TextButton(onClick = vm::redo, enabled = state.canRedo) { Text("Redo") }
-            // Reachable from the canvas, not buried behind a developer setting
-            // -- docs/24-trace.md §4.
-            TextButton(onClick = { screen = Screen.TRACE }) { Text("Trace") }
-            TextButton(onClick = { screen = Screen.SETTINGS }) { Text("⚙") }
-        }
-
-        Box(Modifier.weight(1f)) {
+        },
+        bottomBar = {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .imePadding()
+                    .padding(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                OutlinedTextField(
+                    value = input,
+                    onValueChange = {
+                        input = it
+                        vm.clearMessage()
+                    },
+                    placeholder = { Text("say what should happen") },
+                    singleLine = true,
+                    enabled = !state.thinking,
+                    modifier = Modifier.weight(1f),
+                )
+                Button(
+                    onClick = {
+                        vm.send(input)
+                        input = ""
+                    },
+                    enabled = !state.thinking && input.isNotBlank(),
+                ) {
+                    Text("Go")
+                }
+            }
+        },
+    ) { padding ->
+        Box(
+            Modifier
+                .fillMaxSize()
+                .padding(padding),
+        ) {
             BoardCanvas(
                 board = state.board,
                 selected = state.selected,
-                scale = scale,
+                scale = baseScale * zoom,
                 onSelect = vm::select,
                 onDrag = vm::dragTo,
                 modifier = Modifier.fillMaxSize(),
@@ -131,13 +206,17 @@ internal fun AppScreen(vm: BoardViewModel) {
                     "Tell it what to make.\nTry \"create a village\" or \"make a dungeon\".",
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.align(Alignment.Center).padding(32.dp),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(32.dp),
                 )
             }
 
             if (state.thinking) {
                 CircularProgressIndicator(
-                    Modifier.align(Alignment.TopEnd).padding(16.dp),
+                    Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(16.dp),
                 )
             }
 
@@ -154,37 +233,6 @@ internal fun AppScreen(vm: BoardViewModel) {
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                     )
                 }
-            }
-        }
-
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .navigationBarsPadding()
-                .imePadding()
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            OutlinedTextField(
-                value = input,
-                onValueChange = {
-                    input = it
-                    vm.clearMessage()
-                },
-                placeholder = { Text("say what should happen") },
-                singleLine = true,
-                enabled = !state.thinking,
-                modifier = Modifier.weight(1f),
-            )
-            Button(
-                onClick = {
-                    vm.send(input)
-                    input = ""
-                },
-                enabled = !state.thinking && input.isNotBlank(),
-            ) {
-                Text("Go")
             }
         }
     }

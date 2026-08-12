@@ -2,15 +2,12 @@ package dev.droiddoodle.app.trace
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -42,44 +39,26 @@ import dev.droiddoodle.agent.TraceRecord
  * the app a toy that happens to keep logs.
  */
 @Composable
-internal fun TraceScreen(
-    traces: List<TraceRecord>,
-    onExportAll: () -> Unit,
-    onBack: () -> Unit,
-) {
+internal fun TraceScreen(traces: List<TraceRecord>) {
     var openTurnId by remember { mutableStateOf<String?>(null) }
     val open = traces.firstOrNull { it.turnId == openTurnId }
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsPadding(),
-    ) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            TextButton(onClick = { if (open != null) openTurnId = null else onBack() }) {
-                Text("Back")
-            }
-            Text(
-                if (open != null) "Turn detail" else "Trace · ${traces.size} turns",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.weight(1f),
-            )
-            if (open == null) {
-                TextButton(onClick = onExportAll, enabled = traces.isNotEmpty()) {
-                    Text("Export")
-                }
-            }
-        }
-        HorizontalDivider()
-
+    Column(Modifier.fillMaxSize()) {
         if (open != null) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                TextButton(onClick = { openTurnId = null }) { Text("← All turns") }
+                Text(
+                    open.userMessage.lineSequence().first(),
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+            HorizontalDivider()
             TurnDetail(open)
         } else if (traces.isEmpty()) {
             Text(

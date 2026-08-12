@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AssistChip
@@ -19,7 +17,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,55 +41,30 @@ import kotlin.math.roundToInt
 internal fun SettingsScreen(
     snapshot: SettingsSnapshot,
     onChange: (key: String, value: String) -> Unit,
-    onResetAll: () -> Unit,
-    onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // Grouped by the key prefix, which is already how the registry is organised.
     val groups = SettingsRegistry.ALL.groupBy { it.key.substringBefore('.') }
 
-    Column(
-        modifier
-            .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsPadding(),
+    LazyColumn(
+        modifier.fillMaxSize(),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     ) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            TextButton(onClick = onBack) { Text("Back") }
-            Text(
-                "Settings",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.weight(1f),
-            )
-            TextButton(onClick = onResetAll) { Text("Reset all") }
-        }
-
-        LazyColumn(
-            Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-        ) {
-            groups.forEach { (prefix, defs) ->
-                item(key = "header-$prefix") {
-                    Text(
-                        prefix,
-                        style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
-                    )
-                    HorizontalDivider()
-                }
-                items(defs, key = { it.key }) { def ->
-                    SettingRow(
-                        def = def,
-                        value = snapshot.string(def.key),
-                        onChange = { onChange(def.key, it) },
-                    )
-                }
+        groups.forEach { (prefix, defs) ->
+            item(key = "header-$prefix") {
+                Text(
+                    prefix,
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
+                )
+                HorizontalDivider()
+            }
+            items(defs, key = { it.key }) { def ->
+                SettingRow(
+                    def = def,
+                    value = snapshot.string(def.key),
+                    onChange = { onChange(def.key, it) },
+                )
             }
         }
     }
