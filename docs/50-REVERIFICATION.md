@@ -1,10 +1,16 @@
 # 50 — Reverification
 
-Final pass over packages P0–P6, checking the implementation against
+Running record of what the implementation actually establishes, checked against
 `40-IMPLEMENTATION-PLAN.md`, the specifications, and `00-INTENT.md`.
 
-Verified at CI run 5 on the `jvm` job: all five modules compile, all tests pass,
-zero warnings.
+**Last updated at CI run 23** (P0–P9 built). The `jvm` job now runs
+`gradle build`, so every included module compiles and every test runs — an
+enumerated task list had already nearly missed `:prompt-suite`. The `android`
+job assembles debug *and* release, unzips the APK to confirm the native library
+and model manifest are packaged, and runs Android Lint: **0 errors, 34
+warnings**, all of them "a newer version exists" against deliberately pinned
+versions, plus two `ChromeOsAbiSupport` notes about the intentional arm64-only
+build.
 
 ---
 
@@ -48,8 +54,8 @@ Every plan acceptance criterion for P0–P6 has a corresponding test.
 | P3 castle north of village | met — `move-02` |
 | P4 undo restores exactly | met — `anaph-04` |
 | P5 model pass rate published | **not answerable yet** — needs P10 |
-| L1 complete trace per turn | met in structure; JSON export lands in P9 |
-| L2 strategy swappable | interface in place, two registered stubs — **unproven until a second strategy exists** |
+| L1 complete trace per turn | met — JSON export in `TraceJson`, with a reflection-based drift detector that fails when a field is added to a traced type but not to the exporter, and a separate assertion that the prompt survives export verbatim |
+| L2 strategy swappable | **met, with a stated limit** — `single_shot` is implemented and `StrategySwapTest` shows the same request yielding one inference instead of two, a refused `find`-first plan, and a different `strategyId`. It delegates to the same pipeline with both extra rounds disabled, so it proves the seam works and that behaviour differs observably through it. It does **not** prove the interface would accommodate a loop shaped unlike plan-then-execute; `ReActStrategy` is still a stub and that question stays open. |
 | L3 model swappable | met — `:core-agent` depends only on `LlmEngine` |
 | L4 headless JVM, no Android | met — the whole suite runs in CI without an emulator |
 | L5 tool and grammar cannot drift | met — grammar emitted from `ToolSchema`, drift test in place |
@@ -78,7 +84,10 @@ reveals.
 
 ## 4. What green does not mean
 
-- **Nothing has run on a device.** No APK exists.
+- **Nothing has run on a device.** An APK exists and is published, and CI proves
+  it contains `libdroiddoodle_llama.so` and `assets/models.json` — but nobody
+  has installed it. Every DEVICE-tagged criterion across P7, P8 and P9 is
+  unverified.
 - **No real model has produced a single plan.** Every plan in the suite was
   written by hand. RUNTIME mode proves the runtime executes correct plans
   correctly and says nothing about whether a 1B model can produce them — the
@@ -88,9 +97,41 @@ reveals.
   construct, not that the sampler does. P8 closes this.
 - **No latency or memory number exists.**
 
-## 5. Honest next step
+- **KV prefix reuse is not implemented.** A stated P8 acceptance criterion.
+  `cachedPrefixTokens` is always 0, deliberately, until P10 provides a baseline
+  to measure an optimisation against (`25-inference.md` §4).
 
-P7 (`:app`, Compose canvas on `MockEngine`) is the right next package: it
-produces the first APK and the first thing a person can look at, while still
-needing no model. P8 then answers whether the grammar survives contact with a
-real sampler.
+## 5. Defects found after P6
+
+7. **`use_mmap` no longer existed.** The pinned llama.cpp revision is the very
+   commit that replaced it with a `load_mode` enum. Prompted a check of all 26
+   `llama.h` symbols the bridge calls against the pinned header rather than
+   against memory; the rest were correct.
+8. **`--` inside an XML comment**, which XML forbids, failed resource parsing.
+9. **A bogus `LazyListScope.item` import** — `item` is a member, not an
+   importable extension. Same class of mistake as the Compose `weight` import in
+   P7, and the second time it has cost a CI round trip.
+10. **Colliding turn ids in MODEL mode.** Every case used a bare sequential
+    generator, so every case's turn was `turn-1` and an exported multi-case
+    document carried duplicate ids — unusable as a record. Now prefixed with the
+    case id.
+11. **`File.usableSpace` under-reports** the space a download could claim, since
+    Android will evict other apps' cached data to satisfy an allocation. On a
+    nearly full phone the gap is easily a gigabyte, which for a 700MB model is
+    the difference between refusing a download and completing one. Found by
+    lint, not by review. Now `StorageManager.getAllocatableBytes`.
+
+Defects 8 and 9 are both "the compiler would have caught this in a second". They
+are the running cost of constraint C2, and the argument for a local toolchain
+rather than for more care.
+
+## 6. Honest next step
+
+**Everything that can be built without hardware is built.** P0–P9 compile, all
+tests pass, the APK packages correctly, and lint is clean of errors.
+
+The next step is not a package: it is installing the APK. Every remaining
+question — does the canvas render, does a model load in the memory available,
+does the grammar survive contact with a real sampler, what is the latency — is
+DEVICE- or MODEL-tagged. P10 cannot begin until the suite runner has been
+pointed at a real model, and the suite runner is written and waiting.

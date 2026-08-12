@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  A grid with one filled cell and an edge leaving it: the whole app in one
+  glyph. Drawn as a vector rather than shipped as PNG densities so there are no
+  binary assets in the repository.
+
+  The 108dp canvas is the adaptive-icon standard; the safe zone is the middle
+  72dp, so everything meaningful stays inside roughly 26..82.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- grid -->
+    <path
+        android:strokeColor="#8FBFEA"
+        android:strokeWidth="1.5"
+        android:pathData="M30,30 h48 M30,54 h48 M30,78 h48 M30,30 v48 M54,30 v48 M78,30 v48" />
+
+    <!-- the occupied cell -->
+    <path
+        android:fillColor="#9FD2FF"
+        android:pathData="M32,32 h20 v20 h-20 z" />
+
+    <!-- an edge to a second node -->
+    <path
+        android:strokeColor="#F0A868"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M52,52 L68,68" />
+    <path
+        android:fillColor="#F0A868"
+        android:pathData="M62,62 m-7,0 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0" />
+</vector>

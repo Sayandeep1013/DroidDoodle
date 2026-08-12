@@ -1,6 +1,7 @@
 package dev.droiddoodle.app.model
 
 import android.content.Context
+import android.os.storage.StorageManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
@@ -24,6 +25,8 @@ import java.security.MessageDigest
 internal class ModelStore(context: Context) {
 
     private val root: File = File(context.filesDir, "models").apply { mkdirs() }
+    private val storageManager =
+        context.getSystemService(Context.STORAGE_SERVICE) as StorageManager
 
     fun fileFor(id: String): File = File(root, "$id.gguf")
 
@@ -39,7 +42,20 @@ internal class ModelStore(context: Context) {
     /** Bytes already fetched into the resumable part file, 0 if none. */
     fun partialBytes(id: String): Long = partFor(id).let { if (it.isFile) it.length() else 0L }
 
-    fun usableSpaceBytes(): Long = root.usableSpace
+    /**
+     * Space the app could actually claim, not merely what is free right now.
+     *
+     * `File.usableSpace` under-reports: Android will evict other apps' cached
+     * data to satisfy an allocation, and `getAllocatableBytes` accounts for
+     * that. On a phone with a nearly full disk the difference is easily a
+     * gigabyte, which for a 700MB model is the difference between refusing a
+     * download and completing one. Falls back to `usableSpace` if the storage
+     * service declines to answer.
+     */
+    fun usableSpaceBytes(): Long = runCatching {
+        val uuid = storageManager.getUuidForPath(root)
+        storageManager.getAllocatableBytes(uuid)
+    }.getOrElse { root.usableSpace }
 
     fun delete(id: String) {
         fileFor(id).delete()
