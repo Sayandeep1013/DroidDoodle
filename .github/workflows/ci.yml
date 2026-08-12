@@ -155,7 +155,11 @@ jobs:
         continue-on-error: true
         run: |
           set -o pipefail
-          gradle --no-daemon --stacktrace \
+          # --continue so a native build failure does not hide the Kotlin
+          # errors. compileDebugKotlin does not depend on buildCMakeDebug, and
+          # with no local compiler (constraint C2) every hidden error costs a
+          # full CI round trip to discover.
+          gradle --no-daemon --stacktrace --continue \
             "-Pdd.ndkVersion=$NDK_VERSION" \
             :app:assembleDebug 2>&1 \
             | tee "$RUNNER_TEMP/android.log"

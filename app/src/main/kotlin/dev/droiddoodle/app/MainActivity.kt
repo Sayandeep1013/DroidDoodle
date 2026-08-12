@@ -33,7 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,14 +40,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             DroidDoodleTheme {
-                Surface(Modifier.fillMaxSize()) { AppScreen() }
+                Surface(Modifier.fillMaxSize()) { AppRoot() }
             }
         }
     }
 }
 
 @Composable
-private fun AppScreen(vm: BoardViewModel = viewModel()) {
+internal fun AppScreen(vm: BoardViewModel) {
     val state by vm.state.collectAsStateWithLifecycle()
     var input by remember { mutableStateOf("") }
     var scale by remember { mutableFloatStateOf(1f) }

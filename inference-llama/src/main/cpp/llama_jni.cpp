@@ -7,6 +7,7 @@
 #include <jni.h>
 #include <android/log.h>
 
+#include <algorithm>
 #include <chrono>
 #include <cstring>
 #include <string>
@@ -117,7 +118,14 @@ Java_dev_droiddoodle_inference_llama_LlamaNative_loadModel(
     // CPU only. On the target class of device the available GPU backends are
     // inconsistent, and CPU-only keeps the latency numbers interpretable.
     mparams.n_gpu_layers = 0;
-    mparams.use_mmap = true;
+    // mmap, explicitly rather than via AUTO. The model is the largest thing the
+    // process touches; mapping it lets the kernel evict pages under pressure
+    // instead of the app being killed, which is the difference between usable
+    // and not on a 6GB device. Not MLOCK: pinning ~700MB is how you get killed.
+    //
+    // The pinned revision is the commit that replaced the old `use_mmap` bool
+    // with this enum -- a good illustration of why the submodule is pinned.
+    mparams.load_mode = LLAMA_LOAD_MODE_MMAP;
 
     llama_model *model = llama_model_load_from_file(model_path.c_str(), mparams);
     if (model == nullptr) {

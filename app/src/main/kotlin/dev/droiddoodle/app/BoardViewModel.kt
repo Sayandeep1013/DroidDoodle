@@ -20,6 +20,7 @@ import dev.droiddoodle.model.SettingsSnapshot
 import dev.droiddoodle.model.Viewport
 import dev.droiddoodle.world.Board
 import dev.droiddoodle.world.BoardOps
+import dev.droiddoodle.inference.LlmEngine
 import dev.droiddoodle.world.History
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -48,14 +49,18 @@ internal data class PendingConfirmation(
     val doomed: List<NodeId>,
 )
 
-internal class BoardViewModel : ViewModel() {
+/**
+ * The engine arrives from outside rather than being constructed here, which is
+ * what keeps intent criterion L3 visible at the top level: swapping a scripted
+ * fixture for llama.cpp changes this one constructor argument and nothing else.
+ */
+internal class BoardViewModel(private val engine: LlmEngine) : ViewModel() {
 
     private val _state = MutableStateFlow(UiState())
     val state: StateFlow<UiState> = _state.asStateFlow()
 
     private val strategy = PlanThenExecuteStrategy()
     private val registry = ToolRegistry()
-    private val engine = DemoEngine()
     private val settings = SettingsSnapshot.DEFAULTS
 
     fun send(text: String, confirmationGranted: Boolean = false) {

@@ -2,6 +2,7 @@ package dev.droiddoodle.inference.llama
 
 import dev.droiddoodle.inference.GenerationResult
 import dev.droiddoodle.inference.LlmEngine
+import dev.droiddoodle.inference.PromptTemplate
 import dev.droiddoodle.inference.SamplingParams
 import dev.droiddoodle.inference.StopReason
 import kotlinx.coroutines.Dispatchers
@@ -51,8 +52,18 @@ public class LlamaLoadException(message: String) : IllegalStateException(message
 public class LlamaEngine private constructor(
     private val handle: Long,
     override val modelId: String,
-    override val contextTokens: Int,
+    private val windowTokens: Int,
+    public val promptTemplate: PromptTemplate,
+    private val envelopeTokens: Int,
 ) : LlmEngine {
+
+    /**
+     * The window the agent may actually fill, which is the model's context minus
+     * the template delimiters the engine will add. Reporting the raw window
+     * instead would let the context budget overspend by exactly the amount the
+     * agent cannot see.
+     */
+    override val contextTokens: Int = windowTokens - envelopeTokens
 
     @Volatile
     private var closed = false
@@ -71,7 +82,9 @@ public class LlamaEngine private constructor(
         val stats = LongArray(STAT_COUNT)
         val text = LlamaNative.generate(
             handle = handle,
-            prompt = prompt,
+            // The agent hands over a plain assembled context and never learns
+            // which delimiters the model wants -- intent criterion L3.
+            prompt = promptTemplate.wrap(prompt),
             grammar = grammar,
             temperature = params.temperature,
             topP = params.topP,
@@ -126,6 +139,7 @@ public class LlamaEngine private constructor(
             modelPath: String,
             modelId: String,
             contextTokens: Int,
+            promptTemplate: PromptTemplate,
             threads: Int = defaultThreads(),
         ): LlamaEngine {
             LlamaNative.backendInit()
@@ -133,7 +147,16 @@ public class LlamaEngine private constructor(
             if (handle == 0L) {
                 throw LlamaLoadException("llama.cpp could not load the model at $modelPath")
             }
-            return LlamaEngine(handle, modelId, contextTokens)
+            // Measured with the real tokeniser rather than estimated, for the
+            // same reason tokenCount is on the interface at all.
+            val envelopeTokens = LlamaNative.tokenCount(handle, promptTemplate.envelope())
+            return LlamaEngine(
+                handle = handle,
+                modelId = modelId,
+                windowTokens = contextTokens,
+                promptTemplate = promptTemplate,
+                envelopeTokens = envelopeTokens.coerceAtLeast(0),
+            )
         }
     }
 }

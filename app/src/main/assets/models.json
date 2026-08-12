@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "_comment": [
+    "Curated download candidates. Every sha256 and fileBytes here was read from",
+    "the HuggingFace LFS pointer for that exact file, not estimated.",
+    "",
+    "Repositories are chosen for being ungated. Google's own gemma GGUF repos",
+    "require an accepted licence and a bearer token, which an offline-first app",
+    "with no account cannot satisfy, so the ggml-org mirrors are used instead.",
+    "",
+    "estimatedResidentBytes IS a guess: file size plus a coarse allowance for the",
+    "KV cache at contextTokens. Replacing these with measurements on the target",
+    "device is P10's job -- see docs/25-inference.md section 6, which is explicit",
+    "that the model list is not settled until it has been measured."
+  ],
+  "models": [
+    {
+      "id": "gemma-3-1b-it-qat-q4_0",
+      "displayName": "Gemma 3 1B Instruct (QAT, Q4_0)",
+      "url": "https://huggingface.co/ggml-org/gemma-3-1b-it-qat-GGUF/resolve/main/gemma-3-1b-it-qat-Q4_0.gguf",
+      "sha256": "ef60e4e91a738c99ae9976b050657dfe68a4007a0ccca121b55ec0c413dccd58",
+      "fileBytes": 720425600,
+      "estimatedResidentBytes": 943718400,
+      "contextTokens": 4096,
+      "promptTemplate": "gemma",
+      "note": "Quantisation-aware trained, so Q4 costs less quality than a post-hoc quant."
+    },
+    {
+      "id": "qwen2.5-1.5b-instruct-q4_k_m",
+      "displayName": "Qwen2.5 1.5B Instruct (Q4_K_M)",
+      "url": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/main/qwen2.5-1.5b-instruct-q4_k_m.gguf",
+      "sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+      "fileBytes": 1117320736,
+      "estimatedResidentBytes": 1468006400,
+      "contextTokens": 4096,
+      "promptTemplate": "chatml",
+      "note": "The largest candidate. Best reasoning of the three, tightest memory fit."
+    },
+    {
+      "id": "qwen2.5-0.5b-instruct-q4_k_m",
+      "displayName": "Qwen2.5 0.5B Instruct (Q4_K_M)",
+      "url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      "sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+      "fileBytes": 491400032,
+      "estimatedResidentBytes": 641728512,
+      "contextTokens": 4096,
+      "promptTemplate": "chatml",
+      "note": "The floor. Included to find where planning ability breaks down, not because it is expected to pass."
+    }
+  ]
+}

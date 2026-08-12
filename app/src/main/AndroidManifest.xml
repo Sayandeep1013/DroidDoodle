@@ -2,12 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
-      No INTERNET permission.
-
-      The model download of docs/25-inference.md §6 lands in P8 and will add it
-      deliberately. Until then its absence is a hard guarantee that intent
-      criterion T3 holds: the app cannot perform network I/O even by accident.
+      INTERNET exists for exactly one reason: the first-run model download of
+      docs/25-inference.md §6. ModelStore is the only class in the app that
+      opens a socket, and nothing downstream of a completed download touches
+      the network. Intent criterion T3 is now an auditable property of that one
+      file rather than of the manifest.
     -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"

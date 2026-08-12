@@ -48,6 +48,9 @@ android {
 
     buildFeatures {
         compose = true
+        // For BuildConfig.DEBUG, which gates the scripted-engine escape hatch in
+        // the model picker. It must not exist in a release build.
+        buildConfig = true
     }
 
     packaging {
