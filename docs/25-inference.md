@@ -118,14 +118,42 @@ so `agent.max_steps` is unenforceable here. Step-count and `$k` ordering are
 static validation concerns (`23-agent-runtime.md` §6). Pretending otherwise
 would be the kind of quiet spec lie that produces a confusing bug later.
 
-### Empty board
+### The first step
 
-When the board has no nodes, `existing` has no alternatives and is omitted;
-`noderef` reduces to `stepref` alone. Tools taking a `NodeRef` remain in the
-grammar, and a step-1 `update_node($1)` is caught by static validation as
-`UNRESOLVED_STEP_REF`. Conditioning tool availability on step position is not
-expressible in GBNF, and adding a second mechanism to approximate it would buy
-less than it costs.
+Step 1 is a different world from the rest of a plan: nothing has run, so no
+`$k` can resolve. The grammar therefore emits a **separate set of rules for the
+first position**, built from `noderef-first`, which offers existing ids and no
+step references at all.
+
+Where that leaves a tool with an unsatisfiable node argument, the tool is
+dropped from the first position. On an empty board this means step 1 admits
+only `create_node`, `find`, `set_setting` and `respond` — and `placement-first`
+offers a cell or `auto` but never a relation, since there is nothing to be
+relative to.
+
+**This spec previously said the opposite**, and was wrong in a way that cost
+real measured accuracy. It argued that conditioning tool availability on step
+position "is not expressible in GBNF" and that a step-1 `$1` would simply be
+caught by static validation as `UNRESOLVED_STEP_REF`. Both claims are false in
+practice:
+
+- It *is* expressible, by emitting one extra set of rules. Full per-index
+  unrolling is not expressible cheaply, but the first position is where the
+  guaranteed failures live.
+- Catching it in validation is not equivalent to preventing it. On an empty
+  board `noderef` collapsed to step references alone, so the grammar offered a
+  reference that could only be rejected — and offered nothing else. Three suite
+  cases died that way on device, 9% of the whole suite, and every one of them
+  looked like the model reasoning badly.
+
+That is the D6 principle applied to its own specification: if the runtime can
+determine something deterministically, the model must not be asked to infer it,
+and a constraint the grammar can express should not be delegated to a validator.
+
+Steps 2 and beyond still share one `noderef` covering every `$k` up to
+`max_steps`, so a plan can still reference a step that has not run yet — step 2
+naming `$5`. That is rarer, was not observed on device, and needs full per-index
+unrolling to remove. It remains a static validation concern.
 
 ### Escaping
 

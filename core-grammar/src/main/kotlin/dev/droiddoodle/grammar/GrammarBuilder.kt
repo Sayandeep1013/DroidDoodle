@@ -35,8 +35,34 @@ public object GrammarBuilder {
         require(anywhere.isNotEmpty()) { "at least one position-free tool is required" }
         require(lastOnly.size <= 1) { "at most one LAST_ONLY tool is supported" }
 
+        // Step 1 is a different world from the rest of the plan: no earlier step
+        // has run, so no `$k` reference can resolve. Emitting one shared
+        // `noderef` meant the grammar offered the model a reference it was
+        // guaranteed to be rejected for, and on an empty board -- where
+        // `existing` is empty and `noderef` collapses to steprefs alone -- the
+        // grammar offered *nothing else*. Three suite cases died that way; the
+        // model was being led somewhere it could only lose.
+        //
+        // So the first position gets its own rules, built from `noderef-first`,
+        // which contains only ids that already exist. Where that leaves a tool
+        // with an unsatisfiable required argument, the tool is dropped from the
+        // first position entirely. UNRESOLVED_STEP_REF at step 1 is now
+        // unrepresentable rather than merely validated against.
+        val firstNodeRefs = spec.existingIds.isNotEmpty()
+        fun availableFirst(tool: ToolSchema) =
+            firstNodeRefs || spec.orderedArgs(tool).none {
+                it.type == ArgType.NODE_REF || it.type == ArgType.NODE_REF_LIST
+            }
+
+        val anywhereFirst = anywhere.filter(::availableFirst)
+        val firstOnlyFirst = firstOnly.filter(::availableFirst)
+        require(anywhereFirst.isNotEmpty()) {
+            "no tool can occupy the first step; the grammar would admit nothing"
+        }
+
         val stepAlternatives = anywhere.joinToString(" | ") { ruleName(it) }
-        val firstAlternatives = (firstOnly.map { ruleName(it) } + "step").joinToString(" | ")
+        val firstAlternatives =
+            (firstOnlyFirst.map { ruleName(it) + FIRST } + "step-first").joinToString(" | ")
 
         val lastRule = lastOnly.firstOrNull()?.let { ruleName(it) }
 
@@ -56,20 +82,27 @@ public object GrammarBuilder {
             append(lit("]}"))
         }
         rules["first"] = firstAlternatives
+        rules["step-first"] = anywhereFirst.joinToString(" | ") { ruleName(it) + FIRST }
         rules["step"] = stepAlternatives
 
         for (tool in spec.tools) {
             rules[ruleName(tool)] = toolRule(spec, tool)
         }
+        for (tool in (anywhereFirst + firstOnlyFirst)) {
+            rules[ruleName(tool) + FIRST] = toolRule(spec, tool, FIRST)
+        }
 
-        rules.putAll(terminalRules(spec))
+        rules.putAll(terminalRules(spec, firstNodeRefs))
 
         return rules.entries.joinToString("\n") { (name, body) -> "$name ::= $body" } + "\n"
     }
 
     private fun ruleName(tool: ToolSchema): String = "tool-" + tool.name.replace('_', '-')
 
-    private fun toolRule(spec: GrammarSpec, tool: ToolSchema): String {
+    /** Suffix marking the first-position variant of a rule. */
+    private const val FIRST = "-first"
+
+    private fun toolRule(spec: GrammarSpec, tool: ToolSchema, suffix: String = ""): String {
         val args = spec.orderedArgs(tool)
         val required = args.filter { it.required }
         val optional = args.filter { !it.required }
@@ -80,8 +113,8 @@ public object GrammarBuilder {
             required.isNotEmpty() -> {
                 // A comma always precedes an optional argument, because at least
                 // one required argument was emitted before it.
-                val head = required.joinToString(" ${lit(",")} ") { kv(it) }
-                val tail = optional.joinToString("") { " ( ${lit(",")} ${kv(it)} )?" }
+                val head = required.joinToString(" ${lit(",")} ") { kv(it, suffix) }
+                val tail = optional.joinToString("") { " ( ${lit(",")} ${kv(it, suffix)} )?" }
                 head + tail
             }
 
@@ -95,9 +128,9 @@ public object GrammarBuilder {
                 // least one argument" a grammar-level guarantee rather than a
                 // validation-time one. `find` is the tool this exists for.
                 optional.indices.joinToString(" | ") { start ->
-                    val head = kv(optional[start])
+                    val head = kv(optional[start], suffix)
                     val tail = optional.drop(start + 1)
-                        .joinToString("") { " ( ${lit(",")} ${kv(it)} )?" }
+                        .joinToString("") { " ( ${lit(",")} ${kv(it, suffix)} )?" }
                     "( $head$tail )"
                 }
             }
@@ -121,18 +154,18 @@ public object GrammarBuilder {
             lit("}}")
     }
 
-    private fun kv(arg: dev.droiddoodle.model.ArgSpec): String =
-        "${lit("\"${arg.name}\":")} ${typeRule(arg.type)}"
+    private fun kv(arg: dev.droiddoodle.model.ArgSpec, suffix: String = ""): String =
+        "${lit("\"${arg.name}\":")} ${typeRule(arg.type, suffix)}"
 
-    private fun typeRule(type: ArgType): String = when (type) {
+    private fun typeRule(type: ArgType, suffix: String = ""): String = when (type) {
         ArgType.STRING -> "string"
-        ArgType.NODE_REF -> "noderef"
-        ArgType.NODE_REF_LIST -> "noderef-list"
+        ArgType.NODE_REF -> "noderef$suffix"
+        ArgType.NODE_REF_LIST -> "noderef-list$suffix"
         ArgType.NODE_TYPE -> "nodetype"
         ArgType.EDGE_TYPE -> "edgetype"
         ArgType.COLOR -> "color"
         ArgType.SIZE -> "size"
-        ArgType.PLACEMENT -> "placement"
+        ArgType.PLACEMENT -> "placement$suffix"
         ArgType.ARRANGE_LAYOUT -> "layout"
         ArgType.ATTR_MAP -> "attrmap"
         ArgType.STRING_LIST -> "string-list"
@@ -140,13 +173,9 @@ public object GrammarBuilder {
         ArgType.SETTING_VALUE -> "string"
     }
 
-    private fun terminalRules(spec: GrammarSpec): Map<String, String> {
+    private fun terminalRules(spec: GrammarSpec, firstNodeRefs: Boolean): Map<String, String> {
         val rules = LinkedHashMap<String, String>()
 
-        // On an empty board `existing` has no alternatives, so it is omitted and
-        // noderef reduces to step references alone. A step-1 reference is then
-        // caught by static validation as UNRESOLVED_STEP_REF -- conditioning
-        // tool availability on step position is not expressible in GBNF.
         val stepRefs = (1 until spec.maxSteps.coerceAtLeast(2))
             .joinToString(" | ") { lit("\$$it") }
         rules["stepref"] = stepRefs
@@ -163,6 +192,15 @@ public object GrammarBuilder {
         rules["noderef-list"] =
             "${lit("[")} noderef ( ${lit(",")} noderef )* ${lit("]")}"
 
+        // The first position sees existing ids only. On an empty board there is
+        // nothing to see, and the rule is omitted along with every tool that
+        // would have needed it.
+        if (firstNodeRefs) {
+            rules["noderef$FIRST"] = "${lit("\"")} existing ${lit("\"")}"
+            rules["noderef-list$FIRST"] =
+                "${lit("[")} noderef$FIRST ( ${lit(",")} noderef$FIRST )* ${lit("]")}"
+        }
+
         rules["nodetype"] = NodeType.entries.joinToString(" | ") { lit("\"${it.name}\"") }
         rules["edgetype"] = EdgeType.entries.joinToString(" | ") { lit("\"${it.name}\"") }
         rules["color"] = NodeColor.entries.joinToString(" | ") { lit("\"${it.name}\"") }
@@ -170,11 +208,25 @@ public object GrammarBuilder {
         rules["layout"] = ArrangeLayout.entries.joinToString(" | ") { lit("\"${it.name}\"") }
         rules["relation"] = Relation.entries.joinToString(" | ") { lit("\"${it.name}\"") }
 
-        rules["placement"] = listOf(
-            "${lit("{\"rel\":")} relation ${lit(",\"ref\":")} noderef ${lit("}")}",
+        val absolutePlacements = listOf(
             "${lit("{\"cell\":{\"row\":")} int ${lit(",\"col\":")} int ${lit("}}")}",
             lit("{\"auto\":true}"),
-        ).joinToString(" | ")
+        )
+        val relative = { ref: String ->
+            "${lit("{\"rel\":")} relation ${lit(",\"ref\":")} $ref ${lit("}")}"
+        }
+        rules["placement"] = (listOf(relative("noderef")) + absolutePlacements)
+            .joinToString(" | ")
+
+        // "north of $1" at step 1 is the trap in its most tempting form: asked
+        // to create something on an empty board, a model reaches for a relative
+        // placement and there is nothing to be relative to. Here it can only
+        // choose a cell or `auto`, both of which succeed.
+        rules["placement$FIRST"] = if (firstNodeRefs) {
+            (listOf(relative("noderef$FIRST")) + absolutePlacements).joinToString(" | ")
+        } else {
+            absolutePlacements.joinToString(" | ")
+        }
 
         // set_setting's key domain is exactly the agent-writable keys, so a write
         // to a protected setting cannot be emitted at all.

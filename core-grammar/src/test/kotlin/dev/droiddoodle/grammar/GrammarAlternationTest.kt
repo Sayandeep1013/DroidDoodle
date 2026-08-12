@@ -3,6 +3,7 @@ package dev.droiddoodle.grammar
 import dev.droiddoodle.model.SettingsRegistry
 import dev.droiddoodle.model.ToolCatalog
 import kotlin.test.Test
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
@@ -132,6 +133,77 @@ class GrammarAlternationTest {
                 checker.check(output).let { it !is dev.droiddoodle.model.Res.Ok },
                 "the checker should reject: $output",
             )
+        }
+    }
+}
+
+/**
+ * The first step is a different world: nothing has run, so no `$k` can resolve.
+ *
+ * These assert that the grammar no longer offers a reference the model is
+ * certain to be rejected for. Three suite cases failed that way on device --
+ * the model asked for `$1` at step 1 because on an empty board the grammar
+ * offered nothing else, and static validation then threw the whole plan out.
+ */
+class FirstStepGrammarTest {
+
+    private fun rules(existing: List<String>): Map<String, String> {
+        val spec = GrammarSpec(
+            tools = ToolCatalog.ALL,
+            existingIds = existing.map { dev.droiddoodle.model.NodeId(it) },
+            maxSteps = 8,
+            agentWritableSettingKeys = SettingsRegistry.AGENT_WRITABLE.map { it.key },
+        )
+        return GrammarBuilder.build(spec)
+            .lineSequence().filter { it.contains("::=") }
+            .associate { it.substringBefore("::=").trim() to it.substringAfter("::=").trim() }
+    }
+
+    @Test
+    fun `on an empty board the first step cannot name a node at all`() {
+        val r = rules(emptyList())
+        assertFalse(r.containsKey("noderef-first"), "there are no ids to refer to")
+        val stepFirst = r.getValue("step-first")
+        // What is left is exactly what can succeed with an empty board.
+        assertTrue(stepFirst.contains("tool-create-node-first"), stepFirst)
+        assertTrue(stepFirst.contains("tool-set-setting-first"), stepFirst)
+        for (unusable in listOf("tool-update-node", "tool-move-node", "tool-delete-node",
+                                "tool-connect", "tool-disconnect", "tool-arrange")) {
+            assertFalse(
+                stepFirst.contains("$unusable-first"),
+                "$unusable needs a node that does not exist yet: $stepFirst",
+            )
+        }
+    }
+
+    @Test
+    fun `on an empty board the first placement cannot be relative`() {
+        // "north of $1" is the trap in its most tempting form: asked to create
+        // something on an empty board, a model reaches for a relative placement
+        // and there is nothing to be relative to.
+        val placement = rules(emptyList()).getValue("placement-first")
+        assertFalse(placement.contains("rel"), placement)
+        assertTrue(placement.contains("auto"), placement)
+    }
+
+    @Test
+    fun `on a populated board the first step may name existing ids but never a step ref`() {
+        val r = rules(listOf("n1", "n2"))
+        val noderefFirst = r.getValue("noderef-first")
+        assertTrue(noderefFirst.contains("existing"), noderefFirst)
+        assertFalse(noderefFirst.contains("stepref"), noderefFirst)
+        // Later steps keep both: by then `$1` genuinely resolves.
+        assertTrue(r.getValue("noderef").contains("stepref"))
+        assertTrue(r.getValue("placement-first").contains("rel"))
+    }
+
+    @Test
+    fun `the first rule only ever routes into first-position variants`() {
+        for (existing in listOf(emptyList(), listOf("n1"))) {
+            val r = rules(existing)
+            for (name in r.getValue("first").split("|").map { it.trim() }) {
+                assertTrue(name.endsWith("-first"), "`first` routes to $name, which is shared")
+            }
         }
     }
 }
