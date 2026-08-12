@@ -57,7 +57,8 @@ internal data class PendingConfirmation(
  * fixture for llama.cpp changes this one constructor argument and nothing else.
  */
 internal class BoardViewModel(
-    private val engine: LlmEngine,
+    /** Public so the suite runner can drive the same loaded engine. */
+    val engine: LlmEngine,
     private val settingsStore: SettingsStore,
 ) : ViewModel() {
 

@@ -42,8 +42,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import dev.droiddoodle.app.resources.ResourceScreen
 import dev.droiddoodle.app.settings.SettingsScreen
+import dev.droiddoodle.app.suite.SuiteRunnerScreen
+import dev.droiddoodle.app.suite.SuiteRunnerViewModel
 import dev.droiddoodle.app.trace.TraceScreen
 import dev.droiddoodle.model.SettingKeys
 
@@ -56,7 +61,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-private enum class Screen { CANVAS, TRACE, SETTINGS, RESOURCES }
+private enum class Screen { CANVAS, TRACE, SETTINGS, RESOURCES, SUITE }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -107,6 +112,24 @@ internal fun AppScreen(vm: BoardViewModel, modelLabel: String) {
             }
             return
         }
+        Screen.SUITE -> {
+            val suiteVm: SuiteRunnerViewModel = viewModel(
+                key = "suite-${vm.engine.modelId}",
+                factory = viewModelFactory { initializer { SuiteRunnerViewModel(vm.engine) } },
+            )
+            SubScreen(title = "Prompt Suite", onBack = { screen = Screen.CANVAS }) {
+                SuiteRunnerScreen(
+                    vm = suiteVm,
+                    onExportTraces = {
+                        shareText(context, it, "suite-${vm.engine.modelId}-traces.json")
+                    },
+                    onExportSummary = {
+                        shareText(context, it, "suite-${vm.engine.modelId}.md")
+                    },
+                )
+            }
+            return
+        }
         Screen.CANVAS -> Unit
     }
 
@@ -144,6 +167,10 @@ internal fun AppScreen(vm: BoardViewModel, modelLabel: String) {
                         DropdownMenuItem(
                             text = { Text("Resources") },
                             onClick = { menuOpen = false; screen = Screen.RESOURCES },
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Prompt Suite") },
+                            onClick = { menuOpen = false; screen = Screen.SUITE },
                         )
                         DropdownMenuItem(
                             text = { Text("Settings") },

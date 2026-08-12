@@ -26,6 +26,9 @@ include(":core-world")
 include(":core-grammar")
 include(":inference")
 include(":core-agent")
+// The Prompt Suite is data, not a test, and is consumed by :app as well as by
+// its own RUNTIME-mode test. Pure Kotlin, so the fast job still runs it.
+include(":prompt-suite")
 
 // Android modules, included conditionally.
 //

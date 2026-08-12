@@ -50,6 +50,7 @@ jobs:
             :core-grammar:test \
             :inference:test \
             :core-agent:test \
+            :prompt-suite:test \
             2>&1 | tee "$RUNNER_TEMP/build.log"
 
       # Publishes compiler diagnostics to a `ci-logs` branch, readable over raw

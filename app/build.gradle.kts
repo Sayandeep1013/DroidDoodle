@@ -64,6 +64,8 @@ dependencies {
     implementation(project(":core-agent"))
     implementation(project(":inference"))
     implementation(project(":inference-llama"))
+    // The Prompt Suite is data the app runs, not a test dependency.
+    implementation(project(":prompt-suite"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
