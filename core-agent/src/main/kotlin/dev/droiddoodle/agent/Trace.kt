@@ -56,6 +56,22 @@ public data class InferenceRound(
     public val outputTokens: Int,
     public val prefillMillis: Long,
     public val decodeMillis: Long,
+    /**
+     * Prompt tokens served from a retained KV prefix. Recorded per round rather
+     * than per turn because a turn's second and third rounds are exactly where
+     * reuse should be highest, and a per-turn total would average that away.
+     *
+     * Always 0 today -- the JNI bridge does not implement prefix reuse yet
+     * (docs/25-inference.md §4). The field exists so the optimisation can be
+     * shown to have worked rather than asserted to have.
+     */
+    public val cachedPrefixTokens: Int = 0,
+    /**
+     * Why decoding stopped. Under a grammar this matters more than it looks:
+     * MAX_TOKENS means the plan was cut off mid-production, which then surfaces
+     * as a parse failure that would otherwise be misread as a grammar defect.
+     */
+    public val stopReason: StopReason = StopReason.COMPLETE,
 ) {
     public val tokensPerSecond: Double
         get() = if (decodeMillis <= 0) 0.0 else outputTokens * 1000.0 / decodeMillis

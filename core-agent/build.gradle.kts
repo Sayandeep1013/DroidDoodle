@@ -12,4 +12,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
 
     testImplementation(libs.kotlinx.coroutines.test)
+    // Test-only. TraceJsonTest reflects over the traced types to catch a field
+    // added to a data class but not to the hand-written exporter.
+    testImplementation(kotlin("reflect"))
 }

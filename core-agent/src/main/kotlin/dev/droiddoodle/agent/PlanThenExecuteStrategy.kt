@@ -113,6 +113,8 @@ public class PlanThenExecuteStrategy : LoopStrategy {
                 outputTokens = generation.outputTokens,
                 prefillMillis = generation.prefillMillis,
                 decodeMillis = generation.decodeMillis,
+                cachedPrefixTokens = generation.cachedPrefixTokens,
+                stopReason = generation.stopReason,
             )
 
             // -- phase 4: parse ---------------------------------------------
