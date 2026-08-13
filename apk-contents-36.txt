@@ -1,0 +1,7 @@
+apk=app/build/outputs/apk/debug/app-debug.apk
+bytes=16279953
+--- native libraries and assets ---
+    10096  1981-01-01 01:01   lib/arm64-v8a/libandroidx.graphics.path.so
+     7112  1981-01-01 01:01   lib/arm64-v8a/libdatastore_shared_counter.so
+  5547416  1981-01-01 01:01   lib/arm64-v8a/libdroiddoodle_llama.so
+     2432  1981-01-01 01:01   assets/models.json

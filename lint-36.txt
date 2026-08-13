@@ -1,0 +1,156 @@
+/home/runner/work/DroidDoodle/DroidDoodle/app/build.gradle.kts:29: Warning: Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the android.os.Build.VERSION_CODES javadoc for details. [OldTargetApi]
+        targetSdk = 35
+        ~~~~~~~~~~~~~~
+
+   Explanation for issues of type "OldTargetApi":
+   When your application runs on a version of Android that is more recent than
+   your targetSdkVersion specifies that it has been tested with, various
+   compatibility modes kick in. This ensures that your application continues
+   to work, but it may look out of place. For example, if the targetSdkVersion
+   is less than 14, your app may get an option button in the UI.
+
+   To fix this issue, set the targetSdkVersion to the highest available value.
+   Then test your app to make sure everything works correctly. You may want to
+   consult the compatibility notes to see what changes apply to each version
+   you are adding support for:
+   https://developer.android.com/reference/android/os/Build.VERSION_CODES.html
+   as well as follow this guide:
+   https://developer.android.com/distribute/best-practices/develop/target-sdk.
+   html
+
+   https://developer.android.com/distribute/best-practices/develop/target-sdk.html
+
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:6: Warning: A newer version of com.android.application than 8.7.3 is available: 9.3.1 [AndroidGradlePluginVersion]
+agp = "8.7.3"
+      ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:6: Warning: A newer version of com.android.application than 8.7.3 is available: 9.3.1 [AndroidGradlePluginVersion]
+agp = "8.7.3"
+      ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:6: Warning: A newer version of com.android.application than 8.7.3 is available: 9.3.1 [AndroidGradlePluginVersion]
+agp = "8.7.3"
+      ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:6: Warning: A newer version of com.android.library than 8.7.3 is available: 9.3.1 [AndroidGradlePluginVersion]
+agp = "8.7.3"
+      ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:6: Warning: A newer version of com.android.library than 8.7.3 is available: 9.3.1 [AndroidGradlePluginVersion]
+agp = "8.7.3"
+      ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:6: Warning: A newer version of com.android.library than 8.7.3 is available: 9.3.1 [AndroidGradlePluginVersion]
+agp = "8.7.3"
+      ~~~~~~~
+
+   Explanation for issues of type "AndroidGradlePluginVersion":
+   This detector looks for usage of the Android Gradle Plugin where the
+   version you are using is not the current stable release. Using older
+   versions is fine, and there are cases where you deliberately want to stick
+   with an older version. However, you may simply not be aware that a more
+   recent version is available, and that is what this lint check helps find.
+
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:7: Warning: A newer version of androidx.compose:compose-bom than 2024.12.01 is available: 2026.08.00 [GradleDependency]
+composeBom = "2024.12.01"
+             ~~~~~~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:7: Warning: A newer version of androidx.compose:compose-bom than 2024.12.01 is available: 2026.08.00 [GradleDependency]
+composeBom = "2024.12.01"
+             ~~~~~~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:7: Warning: A newer version of androidx.compose:compose-bom than 2024.12.01 is available: 2026.08.00 [GradleDependency]
+composeBom = "2024.12.01"
+             ~~~~~~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:8: Warning: A newer version of androidx.activity:activity-compose than 1.9.3 is available: 1.13.0 [GradleDependency]
+activityCompose = "1.9.3"
+                  ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:8: Warning: A newer version of androidx.activity:activity-compose than 1.9.3 is available: 1.13.0 [GradleDependency]
+activityCompose = "1.9.3"
+                  ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:8: Warning: A newer version of androidx.activity:activity-compose than 1.9.3 is available: 1.13.0 [GradleDependency]
+activityCompose = "1.9.3"
+                  ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-runtime-compose than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-runtime-compose than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-runtime-compose than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-viewmodel-compose than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-viewmodel-compose than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-viewmodel-compose than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:10: Warning: A newer version of androidx.datastore:datastore-preferences than 1.1.1 is available: 1.2.1 [GradleDependency]
+datastore = "1.1.1"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:10: Warning: A newer version of androidx.datastore:datastore-preferences than 1.1.1 is available: 1.2.1 [GradleDependency]
+datastore = "1.1.1"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:10: Warning: A newer version of androidx.datastore:datastore-preferences than 1.1.1 is available: 1.2.1 [GradleDependency]
+datastore = "1.1.1"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:11: Warning: A newer version of androidx.core:core-ktx than 1.15.0 is available: 1.19.0 [GradleDependency]
+coreKtx = "1.15.0"
+          ~~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:11: Warning: A newer version of androidx.core:core-ktx than 1.15.0 is available: 1.19.0 [GradleDependency]
+coreKtx = "1.15.0"
+          ~~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:11: Warning: A newer version of androidx.core:core-ktx than 1.15.0 is available: 1.19.0 [GradleDependency]
+coreKtx = "1.15.0"
+          ~~~~~~~~
+
+   Explanation for issues of type "GradleDependency":
+   This detector looks for usages of libraries where the version you are using
+   is not the current stable release. Using older versions is fine, and there
+   are cases where you deliberately want to stick with an older version.
+   However, you may simply not be aware that a more recent version is
+   available, and that is what this lint check helps find.
+
+/home/runner/work/DroidDoodle/DroidDoodle/inference-llama/build.gradle.kts:18: Warning: Missing x86_64 ABI support for ChromeOS [ChromeOsAbiSupport]
+        ndk { abiFilters += "arm64-v8a" }
+                            ~~~~~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/app/build.gradle.kts:35: Warning: Missing x86_64 ABI support for ChromeOS [ChromeOsAbiSupport]
+        ndk { abiFilters += "arm64-v8a" }
+                            ~~~~~~~~~~~
+
+   Explanation for issues of type "ChromeOsAbiSupport":
+   To properly support ChromeOS, your Android application should have an x86
+   and/or x86_64 binary as part of the build configuration. To fix the issue,
+   ensure your files are properly optimized for ARM; the binary translator
+   will then ensure compatibility with x86. Alternatively, add an abiSplit for
+   x86 within your build.gradle file and create the required x86
+   dependencies.
+
+   https://developer.android.com/ndk/guides/abis
+
+/home/runner/work/DroidDoodle/DroidDoodle/app/src/main/kotlin/dev/droiddoodle/app/resources/ResourceScreen.kt:49: Information: Prefer mutableIntStateOf instead of mutableStateOf [AutoboxingStateCreation from androidx.compose.runtime]
+    var tick by remember { mutableStateOf(0) }
+                           ~~~~~~~~~~~~~~
+
+   Explanation for issues of type "AutoboxingStateCreation":
+   Calling mutableStateOf<T>() when T is either backed by a primitive type on
+   the JVM or is a value class results in a state implementation that requires
+   all state values to be boxed. This usually causes an additional allocation
+   for each state write, and adds some additional work to auto-unbox values
+   when reading the value of the state. Instead, prefer to use a specialized
+   primitive state implementation for Int, Long, Float, and Double when the
+   state does not need to track null values and does not override the default
+   SnapshotMutationPolicy. See mutableIntStateOf(), mutableLongStateOf(),
+   mutableFloatStateOf(), and mutableDoubleStateOf() for more information.
+
+   Vendor: Jetpack Compose
+   Identifier: androidx.compose.runtime
+   Feedback: https://issuetracker.google.com/issues/new?component=612128
+
+0 errors, 30 warnings

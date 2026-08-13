@@ -1,0 +1,120 @@
+composeBom = "2024.12.01"
+             ~~~~~~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:7: Warning: A newer version of androidx.compose:compose-bom than 2024.12.01 is available: 2026.08.00 [GradleDependency]
+composeBom = "2024.12.01"
+             ~~~~~~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:7: Warning: A newer version of androidx.compose:compose-bom than 2024.12.01 is available: 2026.08.00 [GradleDependency]
+composeBom = "2024.12.01"
+             ~~~~~~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:8: Warning: A newer version of androidx.activity:activity-compose than 1.9.3 is available: 1.13.0 [GradleDependency]
+activityCompose = "1.9.3"
+                  ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:8: Warning: A newer version of androidx.activity:activity-compose than 1.9.3 is available: 1.13.0 [GradleDependency]
+activityCompose = "1.9.3"
+                  ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:8: Warning: A newer version of androidx.activity:activity-compose than 1.9.3 is available: 1.13.0 [GradleDependency]
+activityCompose = "1.9.3"
+                  ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-runtime-compose than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-runtime-compose than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-runtime-compose than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-viewmodel-compose than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-viewmodel-compose than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:9: Warning: A newer version of androidx.lifecycle:lifecycle-viewmodel-compose than 2.8.7 is available: 2.11.0 [GradleDependency]
+lifecycle = "2.8.7"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:10: Warning: A newer version of androidx.datastore:datastore-preferences than 1.1.1 is available: 1.2.1 [GradleDependency]
+datastore = "1.1.1"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:10: Warning: A newer version of androidx.datastore:datastore-preferences than 1.1.1 is available: 1.2.1 [GradleDependency]
+datastore = "1.1.1"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:10: Warning: A newer version of androidx.datastore:datastore-preferences than 1.1.1 is available: 1.2.1 [GradleDependency]
+datastore = "1.1.1"
+            ~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:11: Warning: A newer version of androidx.core:core-ktx than 1.15.0 is available: 1.19.0 [GradleDependency]
+coreKtx = "1.15.0"
+          ~~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:11: Warning: A newer version of androidx.core:core-ktx than 1.15.0 is available: 1.19.0 [GradleDependency]
+coreKtx = "1.15.0"
+          ~~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/gradle/libs.versions.toml:11: Warning: A newer version of androidx.core:core-ktx than 1.15.0 is available: 1.19.0 [GradleDependency]
+coreKtx = "1.15.0"
+          ~~~~~~~~
+
+   Explanation for issues of type "GradleDependency":
+   This detector looks for usages of libraries where the version you are using
+   is not the current stable release. Using older versions is fine, and there
+   are cases where you deliberately want to stick with an older version.
+   However, you may simply not be aware that a more recent version is
+   available, and that is what this lint check helps find.
+
+/home/runner/work/DroidDoodle/DroidDoodle/inference-llama/build.gradle.kts:18: Warning: Missing x86_64 ABI support for ChromeOS [ChromeOsAbiSupport]
+        ndk { abiFilters += "arm64-v8a" }
+                            ~~~~~~~~~~~
+/home/runner/work/DroidDoodle/DroidDoodle/app/build.gradle.kts:35: Warning: Missing x86_64 ABI support for ChromeOS [ChromeOsAbiSupport]
+        ndk { abiFilters += "arm64-v8a" }
+                            ~~~~~~~~~~~
+
+   Explanation for issues of type "ChromeOsAbiSupport":
+   To properly support ChromeOS, your Android application should have an x86
+   and/or x86_64 binary as part of the build configuration. To fix the issue,
+   ensure your files are properly optimized for ARM; the binary translator
+   will then ensure compatibility with x86. Alternatively, add an abiSplit for
+   x86 within your build.gradle file and create the required x86
+   dependencies.
+
+   https://developer.android.com/ndk/guides/abis
+
+/home/runner/work/DroidDoodle/DroidDoodle/app/src/main/kotlin/dev/droiddoodle/app/resources/ResourceScreen.kt:49: Information: Prefer mutableIntStateOf instead of mutableStateOf [AutoboxingStateCreation from androidx.compose.runtime]
+    var tick by remember { mutableStateOf(0) }
+                           ~~~~~~~~~~~~~~
+
+   Explanation for issues of type "AutoboxingStateCreation":
+   Calling mutableStateOf<T>() when T is either backed by a primitive type on
+   the JVM or is a value class results in a state implementation that requires
+   all state values to be boxed. This usually causes an additional allocation
+   for each state write, and adds some additional work to auto-unbox values
+   when reading the value of the state. Instead, prefer to use a specialized
+   primitive state implementation for Int, Long, Float, and Double when the
+   state does not need to track null values and does not override the default
+   SnapshotMutationPolicy. See mutableIntStateOf(), mutableLongStateOf(),
+   mutableFloatStateOf(), and mutableDoubleStateOf() for more information.
+
+   Vendor: Jetpack Compose
+   Identifier: androidx.compose.runtime
+   Feedback: https://issuetracker.google.com/issues/new?component=612128
+
+0 errors, 30 warnings
+
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/assemble-1786579342778.json
+
+[Incubating] Problems report is available at: file:///home/runner/work/DroidDoodle/DroidDoodle/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 4m 40s
+190 actionable tasks: 129 executed, 61 from cache
