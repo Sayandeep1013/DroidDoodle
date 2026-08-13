@@ -94,25 +94,35 @@ Four named fixtures, so cases stay readable:
 | connect-03 | Relation | VILLAGE | the blacksmith owns the tavern | edgeExists(Borin, Tavern, OWNS) |
 | delete-01 | Delete | VILLAGE | delete the tavern | nodeAbsent(Tavern), nodeCount(2) |
 | delete-02 | Delete | VILLAGE | delete the village | confirmationRequested — container rule |
+| delete-02b | Delete | VILLAGE | delete the village, confirmation granted | outcomeIs(OK), nodeCount(0) — the same request, actually executed |
 | delete-03 | Delete | BOARD_20 | delete everything except the village | confirmationRequested, threshold exceeded |
-| anaph-01 | Reference | VILLAGE | history: "add a castle" → make it red | last_created resolves; Castle is red |
-| anaph-02 | Reference | VILLAGE | history: "add a castle" → move that west of the village | westOf(Castle, Village) |
-| anaph-03 | Reference | VILLAGE | history: "make the blacksmith a vampire" → give him a hammer too | targets Borin |
-| anaph-04 | Reference | VILLAGE | undo that | boardMatchesSnapshot(VILLAGE) — **intent P4** |
+| anaph-01 | Reference | VILLAGE_WITH_CASTLE | refs.lastCreated=Castle → make it red | resolves through the reference table, not the board; colorEquals(Castle, RED) |
+| anaph-02 | Reference | VILLAGE_WITH_CASTLE | refs.lastCreated=Castle → move that west of the village | westOf(Castle, Village) |
 | arrange-01 | Layout | BOARD_20 | line up the characters in a row | all CHARACTER share a row |
-| arrange-02 | Layout | BOARD_20 | put the important ones on the left | CLUSTER_LEFT applied |
-| setting-01 | Settings | VILLAGE | make yourself more creative | settingEquals(model.temperature, raised) |
-| setting-02 | Settings | VILLAGE | stop asking me before deleting things | agent.confirm_threshold raised |
-| fail-01 | Failure | CROWDED | put a castle north of the village | PARTIAL or REJECTED, error names the occupied cell |
-| fail-02 | Failure | VILLAGE | put the village inside the tavern | CONTAINMENT_CYCLE |
-| fail-03 | Failure | VILLAGE | delete n99 | RUNTIME-only, `OutputCheck.None`; asserts `GRAMMAR_VIOLATION` and an untouched board |
+| arrange-02 | Layout | VILLAGE + 2 | put the important ones on the left | westOf(Idea A, Village) |
+| setting-01 | Settings | VILLAGE | make yourself more creative | settingWritten(model.temperature, 0.9) |
+| setting-02 | Settings | VILLAGE | stop asking me before deleting things | settingWritten(agent.confirm_threshold, 20) |
+| fail-01 | Failure | VILLAGE | put a castle exactly where the village is | outcomeIs(PARTIAL) — first step survives, the colliding step is skipped |
+| fail-02 | Failure | VILLAGE | put the village inside the tavern | outcomeIs(REJECTED), boardUnchanged — containment cycle |
+| fail-03 | Failure | VILLAGE | delete n99 | RUNTIME-only, `skipOutputCheck=true`; asserts `GRAMMAR_VIOLATION` and an untouched board |
+| fail-04 | Failure | EMPTY | make a lot of things, `agent.max_steps=3` | outcomeIs(REJECTED), failureCodeIs(STATIC_VALIDATION) — a 6-step plan exceeds a 3-step budget |
 | find-01 | Retrieval | BOARD_20 | make the dragon angry | find as step 1, exactly one retrieval round |
+| find-02 | Retrieval | BOARD_20 | find things twice | failureCodeIs(RETRIEVAL_EXHAUSTED) — find is FIRST_ONLY and single-use per turn |
 | ambig-01 | Ambiguity | VILLAGE | make it better | respond asking for clarification, board unchanged |
 | ambig-02 | Ambiguity | EMPTY | what is the capital of France | board unchanged; no world mutation |
 
 `ambig-02` is not a trivia test. It checks that an out-of-world question does not
 produce spurious board mutations — a small model's most likely failure when
 handed something its tools cannot address.
+
+**Gap, not yet closed:** an earlier draft of this table described `anaph-03`
+("give him a hammer too", resolving an anaphor onto a node named by an *earlier*
+turn rather than the reference table's single slot) and `anaph-04`
+(`undo that`, backing intent P4). Neither was ever implemented as a case —
+`PromptSuite.kt` has only `anaph-01` and `anaph-02`. P4 in `docs/00-INTENT.md`
+is therefore backed by undo's own unit tests in `:core-world`, not by anything
+in this suite, RUNTIME or MODEL. Closing this gap is tracked in
+`docs/HANDOFF.md` rather than pretended away here.
 
 ## 4. Scoring
 

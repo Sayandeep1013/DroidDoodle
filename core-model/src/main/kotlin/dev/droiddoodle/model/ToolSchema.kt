@@ -54,9 +54,13 @@ public data class ToolSchema(
     /**
      * One line per tool plus one line per argument, for prompt block 2.
      *
-     * Enum domains are deliberately omitted: the grammar already makes
-     * out-of-domain values impossible to emit, and restating them would roughly
-     * double the block. See docs/22-context.md §3.
+     * Closed-vocabulary arguments spell their domain directly in `description`
+     * (e.g. "PLACE, CHARACTER, OBJECT, NOTE, or GROUP"). The grammar makes an
+     * out-of-domain value structurally impossible to emit, but that guarantee is
+     * worthless if the model never learns which in-domain value to reach for --
+     * the first on-device Prompt Suite runs showed a 1B model guessing plausible
+     * but wrong tokens (GROUP for a note, BLOCKS for a CONNECTS edge) when the
+     * vocabulary was withheld to save tokens. See docs/22-context.md §3.
      */
     public fun renderForPrompt(): String = buildString {
         append(name).append(": ").append(description)

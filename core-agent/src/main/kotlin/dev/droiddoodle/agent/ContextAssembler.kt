@@ -187,11 +187,16 @@ public class ContextAssembler(
         internal const val MIN_DIGEST_NODES: Int = 5
 
         /**
-         * No few-shot examples. Under grammar-constrained decoding the
-         * structural work examples usually do is already guaranteed, so their
-         * cost -- 300-600 tokens on every turn, permanently -- buys only style.
-         * If the Prompt Suite later shows a reasoning failure that examples fix,
-         * they can be added deliberately and measured.
+         * Three worked examples, added after the first on-device Prompt Suite
+         * runs showed the specific reasoning failure this doc originally
+         * deferred on: under grammar-constrained decoding a 1B model reliably
+         * produces *syntactically* valid JSON with no example to imitate, but
+         * guesses the *shape* wrong almost every time -- {"auto":true} instead
+         * of a relative placement, {"attribute":"x","value":"y"} instead of a
+         * flat fact map, one create_node step instead of the several a compound
+         * request needs. Grammar constraints guarantee the output parses; they
+         * say nothing about which of the parseable outputs the model reaches
+         * for. See docs/22-context.md §2 and results/README.md.
          */
         internal val SYSTEM_RULES: String = """
             You edit a grid board by emitting a plan of tool calls as JSON.
@@ -200,8 +205,18 @@ public class ContextAssembler(
             Refer to a node created earlier in the same plan as ${'$'}1, ${'$'}2, and so on,
             numbered by its step position.
             Omit any optional argument you do not want to change.
-            Positions are relative: say north_of or next_to and the board decides
-            the cell. Only use respond to ask a question or explain a refusal.
+            A request naming several things is several steps in one plan, not one.
+            Only use respond, alone, to ask a question or explain a refusal.
+
+            Example: "create a village with a tavern in it" ->
+            {"steps":[
+            {"tool":"create_node","args":{"type":"PLACE","label":"Village"}},
+            {"tool":"create_node","args":{"type":"PLACE","label":"Tavern","at":{"rel":"NEXT_TO","ref":"${'$'}1"}}},
+            {"tool":"connect","args":{"from":"${'$'}1","to":"${'$'}2","relation":"CONTAINS"}}]}
+            Example: "make the blacksmith secretly a vampire" ->
+            {"steps":[{"tool":"update_node","args":{"node":"n3","set":{"secret":"vampire"}}}]}
+            Example: "what's the weather" ->
+            {"steps":[{"tool":"respond","args":{"text":"I only edit this board."}}]}
         """.trimIndent()
     }
 }

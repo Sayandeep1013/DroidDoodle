@@ -3,6 +3,7 @@ package dev.droiddoodle.suite
 import dev.droiddoodle.agent.Outcome
 import dev.droiddoodle.agent.ReferenceTable
 import dev.droiddoodle.model.EdgeType
+import dev.droiddoodle.model.NodeColor
 import dev.droiddoodle.model.NodeType
 import dev.droiddoodle.model.SettingKeys
 import dev.droiddoodle.model.SettingsSnapshot
@@ -144,7 +145,7 @@ public object PromptSuite {
             board = VILLAGE,
             message = "make the village blue",
             plans = listOf(plan("""{"tool":"update_node","args":{"node":"n1","color":"BLUE"}}""")),
-            assertions = listOf(outcomeIs(Outcome.OK), nodeCount(3)),
+            assertions = listOf(outcomeIs(Outcome.OK), nodeCount(3), colorEquals("Village", NodeColor.BLUE)),
         ),
         SuiteCase(
             id = "move-02",
@@ -246,7 +247,7 @@ public object PromptSuite {
             message = "make it red",
             refs = ReferenceTable(lastCreated = VILLAGE_WITH_CASTLE.idOf("Castle")),
             plans = listOf(plan("""{"tool":"update_node","args":{"node":"n4","color":"RED"}}""")),
-            assertions = listOf(outcomeIs(Outcome.OK), nodeCount(4)),
+            assertions = listOf(outcomeIs(Outcome.OK), nodeCount(4), colorEquals("Castle", NodeColor.RED)),
         ),
         SuiteCase(
             id = "anaph-02",

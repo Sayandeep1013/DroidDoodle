@@ -7,19 +7,24 @@ load-bearing: everything static comes first so the KV cache prefix stays valid
 across turns (see `25-inference.md` §4).
 
 ```
-┌ 1  system rules        static      ~150 tok  ─┐ cached prefix
-└ 2  tool descriptions   static      ~350 tok  ─┘
-  3  board digest        per-turn    ~300 tok
-  4  reference table     per-turn     ~40 tok
-  5  recent turns        per-turn    ~150 tok
-  6  user message        per-turn     ~20 tok
+┌ 1  system rules        static      ~250 tok  ─┐ cached prefix
+└ 2  tool descriptions   static      ~530 tok  ─┘
+  3  board digest        per-turn    4-250 tok
+  4  reference table     per-turn      9 tok when non-empty
+  5  recent turns        per-turn    ~150 tok (not yet exercised by the suite)
+  6  user message        per-turn     ~10 tok
 ```
 
 Budget target: **≤1200 tokens** for a typical turn, leaving comfortable room in
-a 4k window for the plan output. Token counts above are design estimates to be
-replaced with measured values once the real tokenizer is wired; the assembler
-reports actual counts into every trace, so the estimates are checkable rather
-than load-bearing.
+a 4k window for the plan output. Blocks 1-2 grew from ~500 to ~780 tokens on
+2026-08-13 when worked examples and closed-vocabulary hints were added (§2,
+§3) — a measured, deliberate trade of headroom for correctness, not drift.
+Blocks 3-4 are measured from real Prompt Suite traces (the tokenizer has been
+wired since before this document was last accurate); block 5 is still a design
+estimate because no suite case runs a second turn. The worst observed total —
+`BOARD_20` fixtures at ~250 board tokens — now lands around 1040, still under
+budget but with less slack than before. If a future addition pushes a typical
+turn over 1200, something in blocks 1-2 has to be cut to pay for it.
 
 ---
 
@@ -50,21 +55,55 @@ Static, terse, imperative. It states that the model outputs a plan of tool
 calls, that ids come from the digest, that `$k` references earlier steps, and
 that omitted optional arguments keep their current values.
 
-It does **not** contain few-shot examples. Under grammar-constrained decoding
-the structural work examples usually do is already guaranteed, so their cost —
-roughly 300–600 tokens on every turn, permanently — buys only style. If Prompt
-Suite results later show a specific reasoning failure that examples fix, they
-can be added deliberately and their cost measured against the improvement.
+**Update, 2026-08-13:** it now contains three worked examples, reversing the
+original decision below. The two on-device Prompt Suite runs before this
+change both landed at 20% with zero grammar violations — meaning the grammar
+was never the bottleneck, the model's *choice* among grammar-valid outputs
+was. The traces showed why: asked for a relative position the model emitted
+`{"auto":true}` in every observed case rather than `{"rel":"NORTH_OF",...}`;
+asked to record a fact it invented a `{"attribute":"x","value":"y"}` shape
+lifted from `find`'s unrelated flat convention instead of the plain fact map
+`update_node.set` actually takes; asked for several things it emitted one
+`create_node` step and stopped, tokens nowhere near exhausted. None of this is
+a grammar defect — every one of those outputs parses. It is the exact failure
+mode this section's original reasoning left untested. Three examples (one
+multi-step chain with a relative placement and a `connect`, one fact-map
+write, one `respond`) now demonstrate the shapes above. Cost: roughly 130
+tokens, not the 300–600 estimated below, because a compact worked example is
+cheaper than a prose-style demonstration. See `results/README.md` for the
+before/after.
+
+Original reasoning, kept for the record: it does **not** contain few-shot
+examples. Under grammar-constrained decoding the structural work examples
+usually do is already guaranteed, so their cost — roughly 300–600 tokens on
+every turn, permanently — buys only style. If Prompt Suite results later show
+a specific reasoning failure that examples fix, they can be added deliberately
+and their cost measured against the improvement.
 
 ## 3. Block 2 — tool descriptions
 
 Rendered from `ToolSchema`, not hand-written, so they cannot drift.
 
-One line per tool plus one line per argument. Enum domains are **omitted** from
-the text, because the grammar already makes out-of-domain values impossible to
-emit and restating them doubles the block's size.
+One line per tool plus one line per argument.
 
-That deletion is the main reason a ten-tool menu fits in ~350 tokens.
+**Update, 2026-08-13:** closed-vocabulary arguments (`type`, `relation`,
+`layout`, `color`, `size`, the `set_setting` key) now spell their domain
+directly in the argument's `description`, e.g. "PLACE, CHARACTER, OBJECT,
+NOTE, or GROUP". The original decision to omit them, kept below, assumed the
+grammar's structural guarantee was the thing worth protecting. It measured
+correctly and reasoned incorrectly: on-device traces showed the model
+producing the wrong *in-domain* token when the domain was invisible — `GROUP`
+for what should have been a `NOTE`, `BLOCKS` for what should have been a
+`CONNECTS` edge, and `set_setting` essentially never attempted at all against
+ten unguessable dotted keys. A grammar that only prevents the impossible does
+nothing about the merely wrong. The relative-placement and fact-map argument
+shapes are demonstrated by block 1's worked examples instead of spelled out
+here, since they are structures, not flat enumerations.
+
+Original reasoning, kept for the record: enum domains were omitted from the
+text, because the grammar already makes out-of-domain values impossible to
+emit and restating them doubles the block's size. That deletion was the main
+reason a ten-tool menu fit in ~350 tokens; it now costs closer to ~530.
 
 ## 4. Block 3 — board digest
 

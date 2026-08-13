@@ -18,6 +18,7 @@ import dev.droiddoodle.model.Cell
 import dev.droiddoodle.model.Clock
 import dev.droiddoodle.model.EdgeType
 import dev.droiddoodle.model.IdGenerator
+import dev.droiddoodle.model.NodeColor
 import dev.droiddoodle.model.NodeId
 import dev.droiddoodle.model.NodeType
 import dev.droiddoodle.model.Placement
@@ -141,6 +142,21 @@ public fun attrEquals(label: String, key: String, value: String): Assertion = { 
         node == null -> "no node labelled '$label'"
         node.attributes[key] != value ->
             "'$label'.$key is ${node.attributes[key]}, expected '$value'"
+        else -> null
+    }
+}
+
+/**
+ * Checked separately from [attrEquals]: colour lives on `Node.style`, not in
+ * the free-text attribute map, so a case testing "make it red" must assert
+ * this rather than an attribute to actually exercise the `color` argument
+ * instead of passing on outcome and node count alone.
+ */
+public fun colorEquals(label: String, color: NodeColor): Assertion = { o ->
+    val node = o.board.nodes.values.firstOrNull { it.label.equals(label, ignoreCase = true) }
+    when {
+        node == null -> "no node labelled '$label'"
+        node.style.color != color -> "'$label' is ${node.style.color}, expected $color"
         else -> null
     }
 }

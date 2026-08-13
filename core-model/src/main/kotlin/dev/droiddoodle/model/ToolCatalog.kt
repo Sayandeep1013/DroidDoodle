@@ -32,13 +32,17 @@ public object ToolCatalog {
             name = CREATE_NODE,
             description = "add a new thing to the board",
             args = listOf(
-                ArgSpec("type", ArgType.NODE_TYPE, true, "what kind of thing it is"),
+                ArgSpec("type", ArgType.NODE_TYPE, true, "PLACE, CHARACTER, OBJECT, NOTE, or GROUP"),
                 ArgSpec("label", ArgType.STRING, true, "its name"),
                 ArgSpec("kind", ArgType.STRING, false, "a free-text sub-type such as blacksmith"),
-                ArgSpec("at", ArgType.PLACEMENT, false, "where to put it; defaults to automatic"),
-                ArgSpec("attributes", ArgType.ATTR_MAP, false, "extra facts about it"),
-                ArgSpec("color", ArgType.COLOR, false, "its colour"),
-                ArgSpec("size", ArgType.SIZE, false, "its size"),
+                ArgSpec(
+                    "at", ArgType.PLACEMENT, false,
+                    "{\"rel\":NORTH_OF|SOUTH_OF|EAST_OF|WEST_OF|NEXT_TO,\"ref\":id} or " +
+                        "{\"cell\":{\"row\":r,\"col\":c}}; omit for automatic",
+                ),
+                ArgSpec("attributes", ArgType.ATTR_MAP, false, "extra facts, e.g. {\"secret\":\"vampire\"}"),
+                ArgSpec("color", ArgType.COLOR, false, "RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE, or GRAY"),
+                ArgSpec("size", ArgType.SIZE, false, "SMALL, MEDIUM, or LARGE"),
             ),
         ),
         ToolSchema(
@@ -48,10 +52,10 @@ public object ToolCatalog {
                 ArgSpec("node", ArgType.NODE_REF, true, "which thing to change"),
                 ArgSpec("label", ArgType.STRING, false, "a new name"),
                 ArgSpec("kind", ArgType.STRING, false, "a new sub-type"),
-                ArgSpec("set", ArgType.ATTR_MAP, false, "facts to add or overwrite"),
+                ArgSpec("set", ArgType.ATTR_MAP, false, "facts to add or overwrite, e.g. {\"secret\":\"vampire\"}"),
                 ArgSpec("unset", ArgType.STRING_LIST, false, "fact names to remove"),
-                ArgSpec("color", ArgType.COLOR, false, "a new colour"),
-                ArgSpec("size", ArgType.SIZE, false, "a new size"),
+                ArgSpec("color", ArgType.COLOR, false, "RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE, or GRAY"),
+                ArgSpec("size", ArgType.SIZE, false, "SMALL, MEDIUM, or LARGE"),
             ),
         ),
         ToolSchema(
@@ -59,7 +63,11 @@ public object ToolCatalog {
             description = "move something to a new position",
             args = listOf(
                 ArgSpec("node", ArgType.NODE_REF, true, "which thing to move"),
-                ArgSpec("to", ArgType.PLACEMENT, true, "where to move it"),
+                ArgSpec(
+                    "to", ArgType.PLACEMENT, true,
+                    "{\"rel\":NORTH_OF|SOUTH_OF|EAST_OF|WEST_OF|NEXT_TO,\"ref\":id} or " +
+                        "{\"cell\":{\"row\":r,\"col\":c}} or {\"auto\":true}",
+                ),
             ),
         ),
         ToolSchema(
@@ -78,7 +86,10 @@ public object ToolCatalog {
                 // Named 'relation' rather than 'type' so it does not collide
                 // with create_node's 'type' in the model's attention; small
                 // models conflate identically-named arguments across tools.
-                ArgSpec("relation", ArgType.EDGE_TYPE, true, "how they are related"),
+                ArgSpec(
+                    "relation", ArgType.EDGE_TYPE, true,
+                    "CONTAINS, CONNECTS, KNOWS, FEARS, OWNS, BLOCKS, or CUSTOM",
+                ),
                 ArgSpec("label", ArgType.STRING, false, "wording for a CUSTOM relation"),
             ),
         ),
@@ -88,7 +99,10 @@ public object ToolCatalog {
             args = listOf(
                 ArgSpec("from", ArgType.NODE_REF, true, "the subject"),
                 ArgSpec("to", ArgType.NODE_REF, true, "the object"),
-                ArgSpec("relation", ArgType.EDGE_TYPE, false, "which relation; omit to remove all"),
+                ArgSpec(
+                    "relation", ArgType.EDGE_TYPE, false,
+                    "CONTAINS, CONNECTS, KNOWS, FEARS, OWNS, BLOCKS, or CUSTOM; omit to remove all",
+                ),
             ),
         ),
         ToolSchema(
@@ -107,14 +121,24 @@ public object ToolCatalog {
             description = "lay several things out in a pattern",
             args = listOf(
                 ArgSpec("nodes", ArgType.NODE_REF_LIST, true, "which things to lay out"),
-                ArgSpec("layout", ArgType.ARRANGE_LAYOUT, true, "the pattern to use"),
+                ArgSpec(
+                    "layout", ArgType.ARRANGE_LAYOUT, true,
+                    "ROW, COLUMN, GRID, CLUSTER_LEFT, or CLUSTER_RIGHT",
+                ),
             ),
         ),
         ToolSchema(
             name = SET_SETTING,
             description = "change one of your own settings",
             args = listOf(
-                ArgSpec("key", ArgType.SETTING_KEY, true, "which setting"),
+                // The domain is exactly SettingsRegistry.AGENT_WRITABLE, restated
+                // here because these are arbitrary namespaced strings a model has
+                // no chance of spelling correctly by guessing -- unlike the other
+                // enums above, there is no shorter description that still works.
+                ArgSpec(
+                    "key", ArgType.SETTING_KEY, true,
+                    SettingsRegistry.AGENT_WRITABLE.joinToString(", ") { it.key },
+                ),
                 ArgSpec("value", ArgType.SETTING_VALUE, true, "the new value"),
             ),
         ),
