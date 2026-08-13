@@ -1,0 +1,90 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :core-agent:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core-world:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core-model:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :inference:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core-grammar:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core-grammar:processResources NO-SOURCE
+> Task :inference:processResources NO-SOURCE
+> Task :core-world:processResources NO-SOURCE
+> Task :core-agent:processResources NO-SOURCE
+> Task :core-grammar:processTestResources NO-SOURCE
+> Task :core-world:processTestResources NO-SOURCE
+> Task :prompt-suite:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :inference:processTestResources NO-SOURCE
+> Task :core-agent:processTestResources NO-SOURCE
+> Task :prompt-suite:processResources NO-SOURCE
+> Task :prompt-suite:processTestResources NO-SOURCE
+> Task :core-model:processResources NO-SOURCE
+> Task :core-model:processTestResources NO-SOURCE
+> Task :core-model:compileKotlin
+> Task :core-model:compileJava NO-SOURCE
+> Task :core-model:classes UP-TO-DATE
+> Task :core-model:jar
+> Task :core-model:assemble
+> Task :inference:compileKotlin
+> Task :inference:compileJava NO-SOURCE
+> Task :inference:classes UP-TO-DATE
+> Task :inference:jar
+> Task :inference:assemble
+> Task :core-model:compileTestKotlin
+> Task :core-model:compileTestJava NO-SOURCE
+> Task :core-model:testClasses UP-TO-DATE
+> Task :inference:compileTestKotlin
+> Task :inference:compileTestJava NO-SOURCE
+> Task :inference:testClasses UP-TO-DATE
+> Task :core-grammar:compileKotlin
+> Task :core-grammar:compileJava NO-SOURCE
+> Task :core-grammar:classes UP-TO-DATE
+> Task :core-grammar:jar
+> Task :core-grammar:assemble
+> Task :core-model:test
+> Task :core-model:check
+> Task :core-model:build
+> Task :inference:test
+> Task :inference:check
+> Task :inference:build
+> Task :core-world:compileKotlin
+> Task :core-world:compileJava NO-SOURCE
+> Task :core-world:classes UP-TO-DATE
+> Task :core-world:jar
+> Task :core-world:assemble
+> Task :core-grammar:compileTestKotlin
+> Task :core-grammar:compileTestJava NO-SOURCE
+> Task :core-grammar:testClasses UP-TO-DATE
+> Task :core-grammar:test
+> Task :core-grammar:check
+> Task :core-grammar:build
+> Task :core-world:compileTestKotlin
+> Task :core-world:compileTestJava NO-SOURCE
+> Task :core-world:testClasses UP-TO-DATE
+> Task :core-world:test
+> Task :core-world:check
+> Task :core-world:build
+> Task :core-agent:compileKotlin
+> Task :core-agent:compileJava NO-SOURCE
+> Task :core-agent:classes UP-TO-DATE
+> Task :core-agent:jar
+> Task :core-agent:assemble
+> Task :core-agent:compileTestKotlin
+> Task :core-agent:compileTestJava NO-SOURCE
+> Task :core-agent:testClasses UP-TO-DATE
+> Task :prompt-suite:compileKotlin
+> Task :prompt-suite:compileJava NO-SOURCE
+> Task :prompt-suite:classes UP-TO-DATE
+> Task :prompt-suite:jar
+> Task :prompt-suite:assemble
+> Task :prompt-suite:compileTestKotlin
+> Task :prompt-suite:compileTestJava NO-SOURCE
+> Task :prompt-suite:testClasses UP-TO-DATE
+> Task :core-agent:test
+> Task :core-agent:check
+> Task :core-agent:build
+> Task :prompt-suite:test
+> Task :prompt-suite:check
+> Task :prompt-suite:build
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/test-1786579311503.json
+
+BUILD SUCCESSFUL in 44s
+24 actionable tasks: 24 executed
